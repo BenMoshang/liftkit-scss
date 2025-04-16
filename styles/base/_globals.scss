@@ -1,0 +1,162 @@
+:root {
+  font-size: 1rem;
+
+  /* Raw size variables */
+
+  --md: 1em;
+  /* It's okay to use em here because the root font size
+                  has been manually set to 1rem */
+
+  --scaleFactor: 1.618em;
+
+  --sm: calc(var(--md) / var(--scaleFactor));
+  --xs: calc(var(--sm) / var(--scaleFactor));
+  --2xs: calc(var(--xs) / var(--scaleFactor));
+
+  --lg: calc(var(--md) * var(--scaleFactor));
+  --xl: calc(var(--lg) * var(--scaleFactor));
+  --2xl: calc(var(--xl) * var(--scaleFactor));
+
+  /*Increments*/
+
+  --wholestep: 1.618; /* always equals the scalefactor */
+  --halfstep: 1.272; /* always equals the sq. root of scalefactor */
+  --quarterstep: 1.128; /* always equals the sq. root of halfstep */
+  --eighthstep: 1.061; /* always equals the sq. root of quarterstep */
+
+  --wholestep-dec: 0.618; /* equals wholestep - 1 */
+  --halfstep-dec: 0.272; /* equals halfstep - 1 */
+  --quarterstep-dec: 0.128; /* equals quarterstep - 1 */
+  --eighthstep-dec: 0.061; /* equals eighthstep - 1 */
+
+  /* Colors */
+
+  --light__background_mms: #fefbff;
+  --light__onsurface_mms: #1b1b1f;
+  --light__primary_mms: #4658ac;
+  --light__surfacecontainerlowest_mms: #fff;
+  --light__onsurfacevariant_mms: #45464f;
+  --dark__outline_mms: #90909a;
+  --dark__error_mms: #ffb4ab;
+  --dark__primary_mms: #b9c3ff;
+
+  --light__onprimary_mms: #fefbff;
+  --light__outlinevariant_mms: #c6c5d0;
+  --light__shadow_mms: #000;
+  --light__info_mms: #1758c7;
+  --light__secondary_mms: #5a5d72;
+  --light__outline_mms: #767680;
+  --light__inverseprimary_mms: #b9c3ff;
+  --light__surfacecontainerlow_mms: #cbdadd;
+  --light__successcontainer_mms: #92f8b4;
+  --light__onsuccesscontainer_mms: #00210f;
+  --light__infocontainer_mms: #dae2ff;
+  --light__oninfocontainer_mms: #001946;
+  --light__warningcontainer_mms: #ffdea7;
+  --light__onwarningcontainer_mms: #271900;
+  --light__errorcontainer_mms: #ffdad6;
+  --light__onerrorcontainer_mms: #410002;
+  --light__onsecondarycontainer_mms: #171b2c;
+  --light__primarycontainer_mms: #dee1ff;
+  --light__onprimarycontainer_mms: #001258;
+  --light__onsecondary_mms: #fff;
+  --light__secondarycontainer_mms: #dfe1f9;
+  --light__tertiary_mms: #76546e;
+  --light__ontertiary_mms: #fff;
+  --light__tertiarycontainer_mms: #ffd7f2;
+  --light__ontertiarycontainer_mms: #2d1228;
+  --light__error_mms: #ba1a1a;
+  --light__onerror_mms: #fff;
+  --light__onbackground_mms: #1b1b1f;
+  --light__surface_mms: #e8eced;
+  --light__surfacevariant_mms: #e3e1ec;
+  --light__scrim_mms: #000;
+  --light__inversesurface_mms: #303034;
+  --light__inverseonsurface_mms: #f3f0f4;
+  --light__success_mms: #006d3d;
+  --light__onsuccess_mms: #fff;
+  --light__warning_mms: #7c5800;
+  --light__onwarning_mms: #fff;
+  --light__oninfo_mms: #fff;
+  --light__primaryfixed_mms: #dee1ff;
+  --light__onprimaryfixed_mms: #001258;
+  --light__primaryfixeddim_mms: #b9c3ff;
+  --light__onprimaryfixedvariant_mms: #2d3f93;
+  --light__secondaryfixed_mms: #dfe1f9;
+  --light__onsecondaryfixed_mms: #171b2c;
+  --light__secondaryfixeddim_mms: #c3c5dd;
+  --light__onsecondaryfixedvariant_mms: #434659;
+  --light__tertiaryfixed_mms: #ffd7f2;
+  --light__ontertiaryfixed_mms: #2d1228;
+  --light__tertiaryfixeddim_mms: #e5bad8;
+  --light__ontertiaryfixedvariant_mms: #5c3c55;
+  --light__surfacedim_mms: #dcd9de;
+  --light__surfacebright_mms: #fbf8fd;
+  --light__surfacecontainer_mms: #f0edf1;
+  --light__surfacecontainerhigh_mms: #eae7ec;
+  --light__surfacecontainerhighest_mms: #e4e1e6;
+
+  --dark__onprimary_mms: #11277c;
+  --dark__primarycontainer_mms: #2d3f93;
+  --dark__onprimarycontainer_mms: #dee1ff;
+  --dark__secondary_mms: #c3c5dd;
+  --dark__onsecondary_mms: #2c2f42;
+  --dark__secondarycontainer_mms: #434659;
+  --dark__onsecondarycontainer_mms: #dfe1f9;
+  --dark__tertiary_mms: #e5bad8;
+  --dark__ontertiary_mms: #44263e;
+  --dark__tertiarycontainer_mms: #5c3c55;
+  --dark__ontertiarycontainer_mms: #ffd7f2;
+  --dark__onerror_mms: #690005;
+  --dark__errorcontainer_mms: #93000a;
+  --dark__onerrorcontainer_mms: #ffb4ab;
+  --dark__background_mms: #1b1b1f;
+  --dark__onbackground_mms: #e4e1e6;
+  --dark__surface_mms: #131316;
+  --dark__onsurface_mms: #e4e1e6;
+  --dark__onsurfacevariant_mms: #c6c5d0;
+  --dark__surfacevariant_mms: #45464f;
+  --dark__shadow_mms: #000;
+  --dark__inversesurface_mms: #e4e1e6;
+  --dark__scrim_mms: #000;
+  --dark__inverseonsurface_mms: #303034;
+  --dark__inverseprimary_mms: #4658ac;
+  --dark__success_mms: #76db9a;
+  --dark__onsuccess_mms: #00391d;
+  --dark__successcontainer_mms: #00522c;
+  --dark__onsuccesscontainer_mms: #92f8b4;
+  --dark__warning_mms: #f7bd48;
+  --dark__onwarning_mms: #412d00;
+  --dark__warningcontainer_mms: #5e4200;
+  --dark__onwarningcontainer_mms: #ffdea7;
+  --dark__info_mms: #b1c5ff;
+  --dark__oninfo_mms: #002c71;
+  --dark__infocontainer_mms: #00419e;
+  --dark__oninfocontainer_mms: #dae2ff;
+  --dark__primaryfixed_mms: #dee1ff;
+  --dark__onprimaryfixed_mms: #001258;
+  --dark__primaryfixeddim_mms: #b9c3ff;
+  --dark__onprimaryfixedvariant_mms: #2d3f93;
+  --dark__secondaryfixed_mms: #dfe1f9;
+  --dark__secondaryfixeddim_mms: #c3c5dd;
+  --dark__onsecondaryfixed_mms: #171b2c;
+  --dark__onsecondaryfixedvariant_mms: #434659;
+  --dark__tertiaryfixed_mms: #ffd7f2;
+  --dark__ontertiaryfixed_mms: #2d1228;
+  --dark__tertiaryfixeddim_mms: #e5bad8;
+  --dark__ontertiaryfixedvariant_mms: #5c3c55;
+  --dark__surfacedim_mms: #131316;
+  --dark__surfacebright_mms: #39393c;
+  --dark__surfacecontainerlowest_mms: #0e0e11;
+  --dark__surfacecontainer_mms: #1f1f23;
+  --dark__surfacecontainerhigh_mms: #2a2a2d;
+  --dark__surfacecontainerhighest_mms: #353438;
+  --dark__surfacecontainerlow_mms: #1b1b1f;
+  --dark__outlinevariant_mms: #45464f;
+
+  /* Make text look sharper */
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: never;
+}
