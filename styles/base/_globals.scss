@@ -1,8 +1,6 @@
 
 @use "sass:math";
-:root{
-  color-scheme: light dark;
-}
+
 $SCALE: math.div(1.0 + math.sqrt(5.0), 2.0) !default; // ϕ
 $PRECISION: 3 !default;
 

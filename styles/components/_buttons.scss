@@ -1,54 +1,69 @@
-
+// styles/components/_buttons.scss
 @use "sass:math";
 
-@use "globals";
-@use "colors";
-@use "boxes";
-@use "sizes";
+@use "../base/globals"; // Adjusted path relative to new location if needed
+@use "../appearance/colors"; // Adjusted path
+@use "../sizing/scale"; // Adjusted path
+@use "../components/boxes"; // Use the refactored boxes mixin
 
 .button {
-  @include colors.fg__primary;
+  @include colors.fg__primary; // Use foreground color mixin
 
   position: relative;
   display: inline-block;
   overflow: hidden;
+  // Base padding using golden ratio increments related to MD size
   padding: globals.round-to(math.div(globals.$SIZE-SM, globals.$MAJOR-HALF)) globals.round-to(globals.$SIZE-MD);
   text-decoration: none;
 
   border: 1px solid transparent;
   border-radius: 9999px; // round
   background-color: transparent;
+  cursor: pointer; // Ensure pointer cursor
+  touch-action: manipulation; // Improve mobile interaction
 
   &--fill {
-    @include colors.bg__primary;
+    @include colors.bg__primary; // Use background color mixin
   }
 
   &--outline {
-    border-color: var(--outline);
+    border-color: var(--outline); // Use outline variable directly
   }
 
+  // Padding adjustments for icons using standard sizes
   &--start-icon {
-    padding-right: globals.round-to(globals.$SIZE-MD * globals.$MAJOR-HALF);
-    padding-left: globals.round-to(globals.$SIZE-SM);
+    padding-right: globals.round-to(globals.$SIZE-MD); // Keep right padding standard
+    padding-left: globals.round-to(globals.$SIZE-SM); // Reduce left padding for icon
   }
 
   &--end-icon {
-    padding-right: globals.round-to(globals.$SIZE-SM);
+    padding-right: globals.round-to(globals.$SIZE-SM); // Reduce right padding for icon
+    padding-left: globals.round-to(globals.$SIZE-MD); // Keep left padding standard
   }
 
+  // Specific size modifier
   &--large {
-    font-size: globals.round-to(globals.$SIZE-MD * globals.$MAJOR-HALF);
+    // Use a slightly larger base font size, padding will scale relatively
+    font-size: globals.round-to(globals.$SIZE-MD * globals.$MAJOR-QUARTER); // Slightly larger than MD
+    padding: globals.round-to(math.div(globals.$SIZE-MD, globals.$MAJOR-HALF)) globals.round-to(globals.$SIZE-LG); // Adjust padding accordingly
   }
 }
 
 .button__content {
-  @include boxes.h-box;
+  // Use the refactored horizontal box mixin with appropriate gap
+  @include boxes.h-box(sm); // Use 'sm' gap size from the box scale
 
+  display: inline-flex; // Ensure content wrapper is inline-flex for proper alignment
   align-items: center;
-  column-gap: globals.round-to(math.div(globals.$SIZE-SM, globals.$MAJOR-HALF));
+  justify-content: center; // Center content within the button
+  vertical-align: middle; // Align inline-flex container properly if needed
 }
 
 .button__icon {
-  @include sizes.w__sm;
-  @include sizes.h__sm;
+  // Use the generic size mixin from sizing/scale
+  @include scale.size(width, sm);
+  @include scale.size(height, sm);
+  display: inline-flex; // Ensure icon itself is flex for centering if it's an SVG wrapper
+  align-items: center;
+  justify-content: center;
 }
