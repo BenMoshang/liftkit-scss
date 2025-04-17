@@ -1,0 +1,24 @@
+
+.stack {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.stack__layer {
+  grid-area: 1 / 1;
+
+  &--float {
+    position: absolute;
+    inset: 0;
+  }
+
+  &--above {
+    z-index: 1;
+  }
+
+  &--below {
+    z-index: -1;
+  }
+}

@@ -1,25 +1,41 @@
-@use 'utilities/align-items';
-@use 'utilities/align-self';
-@use 'sizing/aspect-ratios';
-@use 'appearance/background-colors';
-@use 'appearance/border-radius';
-@use 'layout/containers';
-@use 'layout/display';
-@use 'typography/font-color';
-@use 'spacing/gaps';
-@use 'base/globals';
-@use 'layout/grid';
-@use 'utilities/icons';
-@use 'utilities/justify-content';
-@use 'spacing/margins';
-@use 'base/normalize';
-@use 'appearance/opacity';
-@use 'layout/overflow';
-@use 'spacing/padding';
-@use 'layout/position';
-@use 'sizing/scale';
-@use 'layout/sections';
-@use 'appearance/shadows';
-@use 'interactivity/state-layers';
-@use 'typography/text-alignment';
-@use 'typography/typography';
+/*!
+ * LiftKit is a lightweight framework for clean, minimalist designs.
+ * Copyright (c) 2024 Niklas Simandi
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+// ---- BASE ----
+@use "base/globals";
+// ---- LAYOUT ----
+@use "layout/containers";
+@use "layout/grids";
+@use "layout/sections";
+@use "layout/stacks";
+// ---- SPACING ----
+@use "spacing/margins";
+// ---- TYPOGRAPHY ----
+@use "typography/typography";
+// ---- APPEARANCE ----
+@use "appearance/colors";
+@use "appearance/shadows";
+// ---- SIZING ----
+@use "sizing/scale";
+// ---- INTERACTIVITY ----
+@use "interactivity/state-layers";
+// ---- COMPONENTS ----
+@use "components/cards";
+@use "components/buttons";
+@use "components/boxes";
+
+@debug "LiftKit-v1.3.0";

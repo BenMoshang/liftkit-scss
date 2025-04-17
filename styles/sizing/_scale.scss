@@ -1,23 +1,24 @@
-.scaleUp__wholestep {
-    transform: scale(var(--wholestep));
-}
+@use "globals";
 
-.scaleUp__halfstep {
-    transform: scale(var(--halfstep));
-}
+// 1. Define your scale lookup once
+$scale-map: (
+  2xs: globals.$SIZE-MD,
+  xs:  globals.$SIZE-MD * globals.$MAJOR-QUARTER,
+  sm:  globals.$SIZE-MD * globals.$MAJOR-HALF,
+  md:  globals.$SIZE-LG,
+  lg:  globals.$SIZE-LG * globals.$MAJOR-HALF,
+  xl:  globals.$SIZE-XL,
+  2xl: globals.$SIZE-2XL,
+  3xl: globals.$SIZE-3XL
+);
 
-.scaleUp__quarterstep {
-    transform: scale(var(--quarterstep));
-}
 
-.scaleDown__wholestep {
-    transform: scale(calc(1 / var(--wholestep)));
-}
 
-.scaleDown__halfstep {
-    transform: scale(calc(1 / var(--halfstep)));
-}
-
-.scaleDown__quarterstep {
-    transform: scale(calc(1 / var(--quarterstep)));
+// 2b. One generic mixin
+@mixin size($prop, $key) {
+  $raw: map-get($scale-map, $key);
+  @if $raw == null {
+    @error "Unknown scale key ‘#{$key}’";
+  }
+  #{$prop}: globals.round-to($raw);
 }

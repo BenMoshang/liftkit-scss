@@ -1,162 +1,48 @@
-:root {
-  font-size: 1rem;
 
-  /* Raw size variables */
+@use "sass:math";
+:root{
+  color-scheme: light dark;
+}
+$SCALE: math.div(1.0 + math.sqrt(5.0), 2.0) !default; // ϕ
+$PRECISION: 3 !default;
 
-  --md: 1em;
-  /* It's okay to use em here because the root font size
-                  has been manually set to 1rem */
+$MAJOR: math.pow($SCALE, 1.0); // ϕ^1
+$MAJOR-HALF: math.pow($SCALE, .5); // √ϕ
+$MAJOR-QUARTER: math.pow($SCALE, .25); // ϕ^1/4
+$MAJOR-EIGHT: math.pow($SCALE, .125); // ϕ^1/8
 
-  --scaleFactor: 1.618em;
+$MINOR: $MAJOR - 1.0; // ϕ - 1
+$MINOR-HALF: $MAJOR-HALF - 1.0; // √ϕ - 1
+$MINOR-QUARTER: $MAJOR-QUARTER - 1.0; // ϕ^1/4 - 1
+$MINOR-EIGHT: $MAJOR-EIGHT - 1.0; // ϕ^1/8 - 1
 
-  --sm: calc(var(--md) / var(--scaleFactor));
-  --xs: calc(var(--sm) / var(--scaleFactor));
-  --2xs: calc(var(--xs) / var(--scaleFactor));
+$SIZE-4XS: 1em * math.pow($SCALE, -5.0);
+$SIZE-3XS: 1em * math.pow($SCALE, -4.0);
 
-  --lg: calc(var(--md) * var(--scaleFactor));
-  --xl: calc(var(--lg) * var(--scaleFactor));
-  --2xl: calc(var(--xl) * var(--scaleFactor));
+$SIZE-2XS: 1em * math.pow($SCALE, -3.0);
+$SIZE-XS: 1em * math.pow($SCALE, -2.0);
+$SIZE-SM: 1em * math.pow($SCALE, -1.0);
+$SIZE-MD: 1em * math.pow($SCALE, 0.0);
+$SIZE-LG: 1em * math.pow($SCALE, 1.0);
+$SIZE-XL: 1em * math.pow($SCALE, 2.0);
+$SIZE-2XL: 1em * math.pow($SCALE, 3.0);
+$SIZE-3XL: 1em * math.pow($SCALE, 4.0);
 
-  /*Increments*/
+$SIZE-4XL: 1em * math.pow($SCALE, 5.0);
 
-  --wholestep: 1.618; /* always equals the scalefactor */
-  --halfstep: 1.272; /* always equals the sq. root of scalefactor */
-  --quarterstep: 1.128; /* always equals the sq. root of halfstep */
-  --eighthstep: 1.061; /* always equals the sq. root of quarterstep */
-
-  --wholestep-dec: 0.618; /* equals wholestep - 1 */
-  --halfstep-dec: 0.272; /* equals halfstep - 1 */
-  --quarterstep-dec: 0.128; /* equals quarterstep - 1 */
-  --eighthstep-dec: 0.061; /* equals eighthstep - 1 */
-
-  /* Colors */
-
-  --light__background: #fefbff;
-  --light__onsurface: #1b1b1f;
-  --light__primary: #4658ac;
-  --light__surfacecontainerlowest: #fff;
-  --light__onsurfacevariant: #45464f;
-  --dark__outline: #90909a;
-  --dark__error: #ffb4ab;
-  --dark__primary: #b9c3ff;
-
-  --light__onprimary: #fefbff;
-  --light__outlinevariant: #c6c5d0;
-  --light__shadow: #000;
-  --light__info: #1758c7;
-  --light__secondary: #5a5d72;
-  --light__outline: #767680;
-  --light__inverseprimary: #b9c3ff;
-  --light__surfacecontainerlow: #cbdadd;
-  --light__successcontainer: #92f8b4;
-  --light__onsuccesscontainer: #00210f;
-  --light__infocontainer: #dae2ff;
-  --light__oninfocontainer: #001946;
-  --light__warningcontainer: #ffdea7;
-  --light__onwarningcontainer: #271900;
-  --light__errorcontainer: #ffdad6;
-  --light__onerrorcontainer: #410002;
-  --light__onsecondarycontainer: #171b2c;
-  --light__primarycontainer: #dee1ff;
-  --light__onprimarycontainer: #001258;
-  --light__onsecondary: #fff;
-  --light__secondarycontainer: #dfe1f9;
-  --light__tertiary: #76546e;
-  --light__ontertiary: #fff;
-  --light__tertiarycontainer: #ffd7f2;
-  --light__ontertiarycontainer: #2d1228;
-  --light__error: #ba1a1a;
-  --light__onerror: #fff;
-  --light__onbackground: #1b1b1f;
-  --light__surface: #e8eced;
-  --light__surfacevariant: #e3e1ec;
-  --light__scrim: #000;
-  --light__inversesurface: #303034;
-  --light__inverseonsurface: #f3f0f4;
-  --light__success: #006d3d;
-  --light__onsuccess: #fff;
-  --light__warning: #7c5800;
-  --light__onwarning: #fff;
-  --light__oninfo: #fff;
-  --light__primaryfixed: #dee1ff;
-  --light__onprimaryfixed: #001258;
-  --light__primaryfixeddim: #b9c3ff;
-  --light__onprimaryfixedvariant: #2d3f93;
-  --light__secondaryfixed: #dfe1f9;
-  --light__onsecondaryfixed: #171b2c;
-  --light__secondaryfixeddim: #c3c5dd;
-  --light__onsecondaryfixedvariant: #434659;
-  --light__tertiaryfixed: #ffd7f2;
-  --light__ontertiaryfixed: #2d1228;
-  --light__tertiaryfixeddim: #e5bad8;
-  --light__ontertiaryfixedvariant: #5c3c55;
-  --light__surfacedim: #dcd9de;
-  --light__surfacebright: #fbf8fd;
-  --light__surfacecontainer: #f0edf1;
-  --light__surfacecontainerhigh: #eae7ec;
-  --light__surfacecontainerhighest: #e4e1e6;
-
-  --dark__onprimary: #11277c;
-  --dark__primarycontainer: #2d3f93;
-  --dark__onprimarycontainer: #dee1ff;
-  --dark__secondary: #c3c5dd;
-  --dark__onsecondary: #2c2f42;
-  --dark__secondarycontainer: #434659;
-  --dark__onsecondarycontainer: #dfe1f9;
-  --dark__tertiary: #e5bad8;
-  --dark__ontertiary: #44263e;
-  --dark__tertiarycontainer: #5c3c55;
-  --dark__ontertiarycontainer: #ffd7f2;
-  --dark__onerror: #690005;
-  --dark__errorcontainer: #93000a;
-  --dark__onerrorcontainer: #ffb4ab;
-  --dark__background: #1b1b1f;
-  --dark__onbackground: #e4e1e6;
-  --dark__surface: #131316;
-  --dark__onsurface: #e4e1e6;
-  --dark__onsurfacevariant: #c6c5d0;
-  --dark__surfacevariant: #45464f;
-  --dark__shadow: #000;
-  --dark__inversesurface: #e4e1e6;
-  --dark__scrim: #000;
-  --dark__inverseonsurface: #303034;
-  --dark__inverseprimary: #4658ac;
-  --dark__success: #76db9a;
-  --dark__onsuccess: #00391d;
-  --dark__successcontainer: #00522c;
-  --dark__onsuccesscontainer: #92f8b4;
-  --dark__warning: #f7bd48;
-  --dark__onwarning: #412d00;
-  --dark__warningcontainer: #5e4200;
-  --dark__onwarningcontainer: #ffdea7;
-  --dark__info: #b1c5ff;
-  --dark__oninfo: #002c71;
-  --dark__infocontainer: #00419e;
-  --dark__oninfocontainer: #dae2ff;
-  --dark__primaryfixed: #dee1ff;
-  --dark__onprimaryfixed: #001258;
-  --dark__primaryfixeddim: #b9c3ff;
-  --dark__onprimaryfixedvariant: #2d3f93;
-  --dark__secondaryfixed: #dfe1f9;
-  --dark__secondaryfixeddim: #c3c5dd;
-  --dark__onsecondaryfixed: #171b2c;
-  --dark__onsecondaryfixedvariant: #434659;
-  --dark__tertiaryfixed: #ffd7f2;
-  --dark__ontertiaryfixed: #2d1228;
-  --dark__tertiaryfixeddim: #e5bad8;
-  --dark__ontertiaryfixedvariant: #5c3c55;
-  --dark__surfacedim: #131316;
-  --dark__surfacebright: #39393c;
-  --dark__surfacecontainerlowest: #0e0e11;
-  --dark__surfacecontainer: #1f1f23;
-  --dark__surfacecontainerhigh: #2a2a2d;
-  --dark__surfacecontainerhighest: #353438;
-  --dark__surfacecontainerlow: #1b1b1f;
-  --dark__outlinevariant: #45464f;
-
-  /* Make text look sharper */
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-smooth: never;
+@function round-to($number, $ndigits: $PRECISION) {
+  @if type-of($number) != number {
+    @error "#{$number} is not a number";
+  }
+  @if $ndigits < 0 {
+    @error "#{$ndigits} is negative";
+  }
+  @if $ndigits == 0 {
+    @return round($number);
+  }
+  $factor: 1;
+  @for $_ from 1 through $ndigits {
+    $factor: $factor * 10;
+  }
+  @return math.div(round($number * $factor), $factor);
 }

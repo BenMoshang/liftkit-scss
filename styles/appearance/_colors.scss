@@ -1,0 +1,170 @@
+@use "sass:map";
+
+// --- Configuration ---
+
+// 1. Seed Colors (Oklch: L% C H)
+$semantic-seeds: (
+  primary:   72.3% 0.219 149.579,  // oklch(72.3% 0.219 149.579) - Bright Green
+  secondary: 52.7% 0.154 150.069,  // oklch(52.7% 0.154 150.069) - Mid Green
+  tertiary:  39.3% 0.095 152.535,  // oklch(39.3% 0.095 152.535) - Dark Green
+  error:     51.8% 0.19 23,       // oklch(51.8% 0.19 23) - Red (Keep standard hue)
+  warning:   62.1% 0.16 65,       // oklch(62.1% 0.16 65) - Orange/Amber (Keep standard hue)
+  info:      61.5% 0.17 245,      // oklch(61.5% 0.17 245) - Blue (Keep standard hue)
+  success:   55.5% 0.17 150       // oklch(55.5% 0.17 150) - Green (Hue aligned to ~150)
+);
+
+$surface-seeds: (
+  surface-light: 99%   0    0,    // oklch(99% 0 0) - Almost pure white
+  surface-dark:  19.5% 0    0     // oklch(19.5% 0 0) - Dark gray
+);
+
+// 2. Tonal Scale Settings
+$steps: 11;                 // Number of tones in the generated scale (white -> seed -> black)
+$half: ($steps - 1) / 2;    // Index of the middle (seed) tone (0-based)
+
+// Map semantic roles to 1-based indices within the $steps scale
+$positions: (
+  on-light:        1,            // Lightest tone (near white) for text/icons on dark backgrounds
+  variant-light:   $half - 2,    // Light accent tone
+  container-light: $half - 1,    // Light container tone
+  light:           $half + 1,    // Base tone for light mode (the seed color itself)
+  dark:            $half + 2,    // Base tone for dark mode
+  variant-dark:    $half + 3,    // Dark accent tone
+  container-dark:  $half + 4,    // Dark container tone
+  on-dark:         $steps         // Darkest tone (near black) for text/icons on light backgrounds
+);
+
+// --- Helpers ---
+
+/**
+ * Returns a seed color variable formatted for use in CSS oklch().
+ * @param {String} $name - Seed color name (e.g., 'primary').
+ * @return {String} - e.g., "oklch(var(--seed-primary))"
+ */
+@function oklch-seed($name) {
+  @return unquote("oklch(var(--seed-#{$name}))");
+}
+
+/**
+ * Generates a tonal scale using Oklch color mixing.
+ * @param {String} $name - Seed color name.
+ * @return {List} - Comma-separated list of CSS color values.
+ */
+@function tonal-scale($name) {
+  $scale: ();
+  $oklch-white: oklch(100% 0 0);
+  $oklch-black: oklch(0% 0 0);
+
+  @for $i from 0 through $steps - 1 {
+    $col: null;
+    @if $i < $half {
+      $pct: ($i / $half) * 100%;
+      $col: unquote("color-mix(in oklch, #{oklch-seed($name)} #{$pct}, #{$oklch-white})");
+    } @else if $i == $half {
+      $col: oklch-seed($name); // Exact seed color at midpoint
+    } @else {
+      $pct: (($i - $half) / $half) * 100%;
+      $col: unquote("color-mix(in oklch, #{$oklch-black} #{$pct}, #{oklch-seed($name)})");
+    }
+    $scale: append($scale, $col, comma);
+  }
+  @return $scale;
+}
+
+/**
+ * Emits CSS custom properties for seed colors.
+ * @param {Map} $map - Map of seed names to Oklch L C H values.
+ */
+@mixin define-seeds($map) {
+  @each $name, $vals in $map {
+    // e.g., --seed-primary: 72.3% 0.219 149.579;
+    --seed-#{$name}: #{nth($vals, 1)} #{nth($vals, 2)} #{nth($vals, 3)};
+  }
+}
+
+// --- Palette Generation ---
+
+:root {
+  color-scheme: light dark; // Enable light/dark mode detection
+
+  // 1. Define seed custom properties
+  @include define-seeds($semantic-seeds);
+  @include define-seeds($surface-seeds);
+
+  // 2. Generate intermediate tonal scales (optional optimization if scales were reused)
+  $scales: ();
+  @each $name in map-keys($semantic-seeds) {
+    $scales: map-merge($scales, ($name: tonal-scale($name)));
+  }
+
+  // 3. Define semantic tokens using light-dark()
+  @each $name in map-keys($semantic-seeds) {
+    $scale: map-get($scales, $name);
+
+    // Main semantic color (e.g., --primary)
+    --#{$name}:
+      unquote("light-dark("
+        + "#{nth($scale, map-get($positions, light))}, "
+        + "#{nth($scale, map-get($positions, dark))}"
+      + ")");
+
+    // Container variant (e.g., --primary-container)
+    --#{$name}-container:
+      unquote("light-dark("
+        + "#{nth($scale, map-get($positions, container-light))}, "
+        + "#{nth($scale, map-get($positions, container-dark))}"
+      + ")");
+
+    // Variant color (e.g., --primary-variant)
+    --#{$name}-variant:
+      unquote("light-dark("
+        + "#{nth($scale, map-get($positions, variant-light))}, "
+        + "#{nth($scale, map-get($positions, variant-dark))}"
+      + ")");
+
+    // Color for text/icons placed ON the main semantic color (e.g., --on-primary)
+    --on-#{$name}:
+      unquote("light-dark("
+        + "#{nth($scale, map-get($positions, on-light))}, " // Usually near white
+        + "#{nth($scale, map-get($positions, on-dark))}"   // Usually near black
+      + ")");
+  }
+
+  // 4. Define surface and background colors
+  --surface-light:  oklch(var(--seed-surface-light));
+  --surface-dark:   oklch(var(--seed-surface-dark));
+  --surface:        light-dark(var(--surface-light), var(--surface-dark));
+  --background:     var(--surface); // Alias background to surface
+
+  // Color for text/icons placed ON the surface/background
+  --on-surface:
+    unquote("light-dark("
+      + "color-contrast(var(--surface-light) vs oklch(0% 0 0), oklch(100% 0 0)), " // Prefer black/white text on light surface
+      + "color-contrast(var(--surface-dark)  vs oklch(100% 0 0), oklch(0% 0 0))"  // Prefer white/black text on dark surface
+    + ")");
+}
+
+
+// --- Utility Classes ---
+
+// Simple utilities to apply the generated theme colors
+.text--primary   { color: var(--primary); }
+.bg--primary     { background-color: var(--primary);   color: var(--on-primary); }
+
+.text--secondary { color: var(--secondary); }
+.bg--secondary   { background-color: var(--secondary); color: var(--on-secondary); }
+
+.text--tertiary  { color: var(--tertiary); }
+.bg--tertiary    { background-color: var(--tertiary);  color: var(--on-tertiary); }
+
+.text--error     { color: var(--error); }
+.bg--error       { background-color: var(--error);     color: var(--on-error); }
+
+.text--warning   { color: var(--warning); }
+.bg--warning     { background-color: var(--warning);   color: var(--on-warning); }
+
+.text--info      { color: var(--info); }
+.bg--info        { background-color: var(--info);      color: var(--on-info); }
+
+.text--success   { color: var(--success); }
+.bg--success     { background-color: var(--success);   color: var(--on-success); }

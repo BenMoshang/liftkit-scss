@@ -1,0 +1,172 @@
+/* ==========================================================================
+   1. Imports
+   ========================================================================== */
+
+@use "colors";
+
+/* ==========================================================================
+   2. Global Resets & Base Styles
+   ========================================================================== */
+
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1. Change from `content-box` to `border-box` */
+}
+
+html {
+	min-block-size: 100svh;
+	inline-size: 100%;
+  scroll-behavior: smooth;
+  scrollbar-track-color: var(--surface);
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--surface);
+  /* Base setup */
+  
+/* Enable keyword animations for users who don't prefer reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+    interpolate-size: allow-keywords;
+}
+}
+
+
+body {
+  @include colors.bg__background; /* Apply background color from colors module */
+  overflow-x: clip; /* Prevent horizontal scrolling */
+  margin: 0; /* Remove default body margin */
+
+  /* Font rendering improvements */
+  font-smooth: antialiased;
+  -webkit-font-smoothing: antialiased; /* For Safari/Chrome */
+  -moz-osx-font-smoothing: grayscale; /* For Firefox */
+  text-rendering: geometricprecision; /* Favors geometry over legibility/speed */
+}
+
+/* ==========================================================================
+   3. Element Resets & Basic Styling
+   ========================================================================== */
+
+/* Reset margins and font inheritance for common elements */
+:where(dt, dd, li, p, h1, h2, h3, h4, h5, h6) {
+  font: inherit;
+  margin: 0;
+  overflow-wrap: break-word; /* Avoid text overflows */
+}
+
+/* Reset lists */
+:where(ul, ol, dl) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Basic table reset */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Form element font inheritance */
+:where(input, button, textarea, select) {
+  font: inherit;
+}
+
+/* Address element style reset */
+address {
+  font-style: normal;
+}
+
+/* Horizontal rule basic styling */
+:where(hr) {
+  display: block; /* Ensure it's treated as a block */
+  width: 100%;
+  height: 1px;
+  margin: 0; /* Reset margin */
+  border: 0; /* Reset border */
+  background-color: var(--outline); /* Use CSS variable for color */
+}
+
+/* Media element defaults */
+:where(img, picture, video, canvas, svg) {
+  display: block; /* Often helpful for layout */
+  max-inline-size: 100%; /* Responsive width */
+  block-size: auto; /* Maintain aspect ratio */
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-style: italic; /* Indicate missing images */
+  shape-margin: 1rem;
+  vertical-align: middle; /* Align nicely if inline */
+}
+
+/* ==========================================================================
+   4. Typography Enhancements
+   ========================================================================== */
+
+/* Improve text wrapping for headings and paragraphs */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word; /* Already set above, but good to see here */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance; /* Attempt to balance line lengths */
+}
+
+p {
+  text-wrap: pretty; /* Improve paragraph line breaking */
+}
+
+/* ==========================================================================
+   5. Link Styling
+   ========================================================================== */
+
+:where(a) {
+  text-decoration: none; /* Remove underline */
+  color: currentColor; /* Inherit text color */
+}
+
+:where(a:active, a:hover, a:focus-visible) {
+  @include colors.fg__primary; /* Apply primary foreground color on interaction */
+}
+
+/* ==========================================================================
+   6. Global UI Styling
+   ========================================================================== */
+
+/* Text selection style */
+::selection {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+/* Interactive Elements */
+button,
+[role='button'],
+select {
+	cursor: pointer;
+	touch-action: manipulation;
+}
+
+/* Scrollbar styling for WebKit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 4px;
+  border: 2px solid var(--surface);
+}

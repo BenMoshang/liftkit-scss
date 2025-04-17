@@ -1,38 +1,35 @@
-.section__leastPadding {
-  padding: 1.618em 4.235em;
+@use "globals";
+
+$section-sizes: (
+  xs: (tb: globals.$SIZE-LG,     rl: globals.$SIZE-2XL),
+  sm: (tb: globals.$SIZE-XL,     rl: globals.$SIZE-2XL),
+  md: (tb: globals.$SIZE-2XL,    rl: globals.$SIZE-2XL),
+  lg: (tb: globals.$SIZE-3XL,    rl: globals.$SIZE-2XL),
+  xl: (tb: globals.$SIZE-4XL,    rl: globals.$SIZE-2XL)
+);
+
+@each $alias, $sizes in $section-sizes {
+  .section__#{$alias} {
+    padding: globals.round-to(map-get($sizes, tb)) globals.round-to(map-get($sizes, rl));
+  }
 }
 
-.section__lessPadding {
-  padding: 2.618em 4.235em;
-}
-
-.section__default {
-  padding: 4.235em;
-}
-
-.section__morePadding {
-  padding: 6.852em 4.235em;
-}
-
-.section__mostPadding {
-  padding: 11.087em 4.235em;
-}
-
-@media screen and (max-width: 991px) {
-  .section__lessPadding {
-    padding: 2.618em 1.618em;
+@media screen and (max-width: 61.9375rem) {
+  .section__xs,
+  .section__sm {
+    padding-right: globals.round-to(globals.$SIZE-LG);
+    padding-left:  globals.round-to(globals.$SIZE-LG);
   }
 
-  .section__default {
-    padding: 1.618em;
-  }
+  $mobile-sizes: (
+    md: (tb: globals.$SIZE-XL, rl: globals.$SIZE-LG),
+    lg: (tb: globals.$SIZE-2XL, rl: globals.$SIZE-LG),
+    xl: (tb: globals.$SIZE-3XL, rl: globals.$SIZE-LG * globals.$MAJOR-HALF)
+  );
 
-  .section__morePadding {
-    padding: 4.235em 1.618em;
+  @each $alias, $sizes in $mobile-sizes {
+    .section__#{$alias} {
+      padding: globals.round-to(map-get($sizes, tb)) globals.round-to(map-get($sizes, rl));
+    }
   }
-
-  .section__mostPadding {
-    padding: 6.852em 1.618em;
-  }
-
 }

@@ -1,0 +1,54 @@
+
+@use "sass:math";
+
+@use "globals";
+@use "colors";
+@use "boxes";
+@use "sizes";
+
+.button {
+  @include colors.fg__primary;
+
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  padding: globals.round-to(math.div(globals.$SIZE-SM, globals.$MAJOR-HALF)) globals.round-to(globals.$SIZE-MD);
+  text-decoration: none;
+
+  border: 1px solid transparent;
+  border-radius: 9999px; // round
+  background-color: transparent;
+
+  &--fill {
+    @include colors.bg__primary;
+  }
+
+  &--outline {
+    border-color: var(--outline);
+  }
+
+  &--start-icon {
+    padding-right: globals.round-to(globals.$SIZE-MD * globals.$MAJOR-HALF);
+    padding-left: globals.round-to(globals.$SIZE-SM);
+  }
+
+  &--end-icon {
+    padding-right: globals.round-to(globals.$SIZE-SM);
+  }
+
+  &--large {
+    font-size: globals.round-to(globals.$SIZE-MD * globals.$MAJOR-HALF);
+  }
+}
+
+.button__content {
+  @include boxes.h-box;
+
+  align-items: center;
+  column-gap: globals.round-to(math.div(globals.$SIZE-SM, globals.$MAJOR-HALF));
+}
+
+.button__icon {
+  @include sizes.w__sm;
+  @include sizes.h__sm;
+}

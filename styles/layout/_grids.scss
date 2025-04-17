@@ -1,0 +1,44 @@
+
+@use "globals";
+
+.grid {
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: 1fr 1fr;
+
+  &--xs {
+    gap: globals.round-to(globals.$SIZE-2XS * globals.$MAJOR-HALF);
+  }
+
+  &--sm {
+    gap: globals.round-to(globals.$SIZE-XS * globals.$MAJOR-HALF);
+  }
+
+  &--md {
+    gap: globals.round-to(globals.$SIZE-SM * globals.$MAJOR-HALF);
+  }
+
+  &--lg {
+    gap: globals.round-to(globals.$SIZE-MD);
+  }
+
+  &--xl {
+    gap: globals.round-to(globals.$SIZE-LG);
+  }
+
+  &--2xl {
+    gap: globals.round-to(globals.$SIZE-XL);
+  }
+}
+
+@for $k from 1 through 9 {
+  .col__#{$k} {
+    grid-template-rows: auto;
+    grid-template-columns: repeat($k, 1fr);
+  }
+
+  .row__#{$k} {
+    grid-template-rows: repeat($k, 1fr);
+    grid-template-columns: auto;
+  }
+}
