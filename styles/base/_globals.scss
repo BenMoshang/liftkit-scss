@@ -1,46 +1,99 @@
-
 @use "sass:math";
 
-$SCALE: math.div(1.0 + math.sqrt(5.0), 2.0) !default; // ϕ
-$PRECISION: 3 !default;
+/*==========================================================================
+ Golden Ratio (Phi) Configuration
+ ==========================================================================*/
 
-$MAJOR: math.pow($SCALE, 1.0); // ϕ^1
-$MAJOR-HALF: math.pow($SCALE, .5); // √ϕ
-$MAJOR-QUARTER: math.pow($SCALE, .25); // ϕ^1/4
-$MAJOR-EIGHT: math.pow($SCALE, .125); // ϕ^1/8
+//-- Core Phi Value --//
+$SCALE: math.div(1.0 + math.sqrt(5.0), 2.0) !default; // ϕ ≈ 1.618
+$PRECISION: 3 !default; // Default decimal precision for rounding
 
-$MINOR: $MAJOR - 1.0; // ϕ - 1
-$MINOR-HALF: $MAJOR-HALF - 1.0; // √ϕ - 1
+//-- Major Proportions (Based on powers of Phi) --//
+$MAJOR: math.pow($SCALE, 1.0);        // ϕ^1
+$MAJOR-HALF: math.pow($SCALE, 0.5);   // √ϕ (ϕ^0.5)
+$MAJOR-QUARTER: math.pow($SCALE, 0.25); // ϕ^1/4
+$MAJOR-EIGHT: math.pow($SCALE, 0.125); // ϕ^1/8
+
+//-- Minor Proportions (Derived from Major Proportions) --//
+// Represents the relationship where 1/ϕ = ϕ - 1
+$MINOR: $MAJOR - 1.0;                 // ϕ - 1 (or 1/ϕ)
+$MINOR-HALF: $MAJOR-HALF - 1.0;       // √ϕ - 1
 $MINOR-QUARTER: $MAJOR-QUARTER - 1.0; // ϕ^1/4 - 1
-$MINOR-EIGHT: $MAJOR-EIGHT - 1.0; // ϕ^1/8 - 1
+$MINOR-EIGHT: $MAJOR-EIGHT - 1.0;     // ϕ^1/8 - 1
 
-$SIZE-4XS: 1em * math.pow($SCALE, -5.0);
-$SIZE-3XS: 1em * math.pow($SCALE, -4.0);
+/*==========================================================================
+ Golden Ratio Size Scale (Based on em units) - Optimized
+ ==========================================================================*/
 
-$SIZE-2XS: 1em * math.pow($SCALE, -3.0);
-$SIZE-XS: 1em * math.pow($SCALE, -2.0);
-$SIZE-SM: 1em * math.pow($SCALE, -1.0);
-$SIZE-MD: 1em * math.pow($SCALE, 0.0);
-$SIZE-LG: 1em * math.pow($SCALE, 1.0);
-$SIZE-XL: 1em * math.pow($SCALE, 2.0);
-$SIZE-2XL: 1em * math.pow($SCALE, 3.0);
-$SIZE-3XL: 1em * math.pow($SCALE, 4.0);
+// Uses powers of Phi to create a harmonious size scale relative to the base font size (1em).
+// Defines a map of size names to their corresponding power of Phi.
+$_size-scale-powers: (
+  "4xs": -5,
+  "3xs": -4,
+  "2xs": -3,
+  "xs":  -2,
+  "sm":  -1,
+  "md":   0, // Base size (Phi^0 = 1)
+  "lg":   1,
+  "xl":   2,
+  "2xl":  3,
+  "3xl":  4,
+  "4xl":  5
+);
 
-$SIZE-4XL: 1em * math.pow($SCALE, 5.0);
+// Dynamically generate size variables using the map.
+// This avoids repetitive calculations and makes the scale easier to adjust.
+@each $name, $power in $_size-scale-powers {
+  // Use CSS Custom Properties for better flexibility and potential JS access.
+  // The variable name will be like `--size-md`.
+  // We calculate the value directly here.
+  :root {
+    --size-#{$name}: #{1em * math.pow($SCALE, $power * 1.0)}; // Ensure float calculation
+  }
 
-@function round-to($number, $ndigits: $PRECISION) {
+  // Optionally, also create Sass variables if needed for complex Sass logic elsewhere.
+  // These would be $SIZE-MD, $SIZE-LG, etc.
+  // Note: Using CSS variables (--size-*) is often preferred for modern workflows.
+  // Uncomment the next line if you specifically need Sass variables.
+  // $SIZE-#{$name}: 1em * math.pow($SCALE, $power * 1.0) !global;
+}
+
+
+/*==========================================================================
+ Utility Functions
+ ==========================================================================*/
+
+/**
+ * Rounds a number to a specified number of decimal places.
+ *
+ * @param {Number} $number - The number to round.
+ * @param {Number} $n-digits [$PRECISION] - The number of decimal places to round to.
+ *
+ * @return {Number} The rounded number.
+ *
+ * @error If $number is not a number.
+ * @error If $n-digits is negative.
+ */
+@function round-to($number, $n-digits: $PRECISION) {
+  //-- Input Validation --//
   @if type-of($number) != number {
-    @error "#{$number} is not a number";
+    @error "`#{$number}` is not a number for the round-to function.";
   }
-  @if $ndigits < 0 {
-    @error "#{$ndigits} is negative";
+  @if type-of($n-digits) != number {
+      @error "`#{$n-digits}` is not a number for the round-to function.";
+  } @else if $n-digits < 0 {
+      @error "Negative precision `#{$n-digits}` is not allowed for the round-to function.";
   }
-  @if $ndigits == 0 {
-    @return round($number);
+
+  //-- Rounding Logic --//
+  @if $n-digits == 0 {
+    // Use Sass's built-in round function for integer rounding
+    @return math.round($number);
   }
-  $factor: 1;
-  @for $_ from 1 through $ndigits {
-    $factor: $factor * 10;
-  }
-  @return math.div(round($number * $factor), $factor);
+
+  // Calculate the factor using math.pow for conciseness
+  $factor: math.pow(10, $n-digits);
+
+  // Multiply, round to nearest integer, then divide back
+  @return math.div(math.round($number * $factor), $factor);
 }
