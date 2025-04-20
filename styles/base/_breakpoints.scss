@@ -1,0 +1,24 @@
+// ==========================================================================
+// styles/base/_breakpoints.scss
+// Defines responsive breakpoints and mixins for media queries.
+// ==========================================================================
+@use 'sass:map';
+
+$breakpoints: (
+  'sm': 40rem,
+  'md': 48rem,
+  'lg': 64rem,
+  'xl': 80rem,
+);
+
+/// Applies styles within a media query for the given breakpoint key.
+@mixin respond-to($breakpoint) {
+  $size: map.get($breakpoints, $breakpoint);
+  @if $size {
+    @media (min-width: $size) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint `#{$breakpoint}`. Valid keys: #{map.keys($breakpoints)}`";
+  }
+}

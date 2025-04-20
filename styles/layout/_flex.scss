@@ -13,40 +13,18 @@
   flex-direction: $direction;
 }
 
-// --- Public Mixins (Definitions Unchanged) ---
-// The public mixins remain the same; the change is in the internal helper they call.
+// --- Public Mixins (Unified) ---
 /**
- * Creates a horizontal block-level flex container.
+ * Applies flex display with direction and optional gap.
+ * @param {String} $direction [row] - Flex direction (row or column).
  * @param {String | Null} $gap-size [null] - Optional gap size key (xs, sm, md, lg, xl, 2xl). Accepts quoted or unquoted.
+ * @param {Boolean} $inline [false] - Whether to use inline-level flex.
  */
-@mixin flex-row($gap-size: null) {
-  @include _flex-container(row, flex);
-  @include gaps.gap($gap-size);
-}
-
-/**
- * Creates a vertical block-level flex container.
- * @param {String | Null} $gap-size [null] - Optional gap size key (xs, sm, md, lg, xl, 2xl). Accepts quoted or unquoted.
- */
-@mixin flex-col($gap-size: null) {
-  @include _flex-container(column, flex);
-  @include gaps.gap($gap-size);
-}
-
-/**
- * Creates a horizontal inline-level flex container.
- * @param {String | Null} $gap-size [null] - Optional gap size key (xs, sm, md, lg, xl, 2xl). Accepts quoted or unquoted.
- */
-@mixin inline-flex-row($gap-size: null) {
-  @include _flex-container(row, inline-flex);
-  @include gaps.gap($gap-size);
-}
-
-/**
- * Creates a vertical inline-level flex container.
- * @param {String | Null} $gap-size [null] - Optional gap size key (xs, sm, md, lg, xl, 2xl). Accepts quoted or unquoted.
- */
-@mixin inline-flex-col($gap-size: null) {
-  @include _flex-container(column, inline-flex);
+@mixin apply-flex($direction: row, $gap-size: null, $inline: false) {
+  @if $inline {
+    @include _flex-container($direction, inline-flex);
+  } @else {
+    @include _flex-container($direction, flex);
+  }
   @include gaps.gap($gap-size);
 }

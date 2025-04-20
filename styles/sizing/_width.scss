@@ -1,7 +1,8 @@
+// 1. Unified size utilities: define and loop for width & height
+@use 'sass:map';
 @use '../base/globals' as globals;
 
-// 1. Define your scale lookup once
-$scale-map: (
+$size-map: (
   2xs: globals.inline-size('md'),
   xs: globals.inline-size('md') * globals.$MAJOR-QUARTER,
   sm: globals.inline-size('md') * globals.$MAJOR-HALF,
@@ -12,18 +13,21 @@ $scale-map: (
   3xl: globals.inline-size('3xl'),
 );
 
-// 2b. One generic mixin
-@mixin inline-size($prop, $key) {
-  $raw: map-get($scale-map, $key);
-  @if $raw == null {
-    @error "Unknown scale key ‘#{$key}’";
+// generic size mixin
+@mixin size($property, $key) {
+  $value: map.get($size-map, $key);
+  @if $value == null {
+    @error "Unknown size key '#{$key}'";
   }
-  #{$prop}: globals.round-to($raw);
+  #{$property}: globals.round-to($value);
 }
 
-// 3. Width utility classes
-@each $key, $value in $scale-map {
+// width and height utilities
+@each $key in map.keys($size-map) {
   .w-#{$key} {
-    @include inline-size(width, $key);
+    @include size(width, $key);
+  }
+  .h-#{$key} {
+    @include size(height, $key);
   }
 }

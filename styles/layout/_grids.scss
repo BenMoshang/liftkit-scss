@@ -1,21 +1,33 @@
+// ===========================================================================
+// styles/layout/_grids.scss
+// Grid utilities: base grid, grid-cols, grid-rows, responsive variants.
+// ===========================================================================
+@use 'sass:map';
 @use '../base/globals';
+@use '../base/breakpoints' as bp;
 
 .grid {
   display: grid;
-  grid-template-rows: auto auto;
-  grid-template-columns: 1fr 1fr;
-
-
 }
 
-@for $k from 1 through 9 {
-  .col__#{$k} {
-    grid-template-rows: auto;
-    grid-template-columns: repeat($k, 1fr);
+@for $n from 1 through 9 {
+  .grid-cols-#{$n} {
+    grid-template-columns: repeat($n, 1fr);
   }
+  .grid-rows-#{$n} {
+    grid-template-rows: repeat($n, 1fr);
+  }
+}
 
-  .row__#{$k} {
-    grid-template-rows: repeat($k, 1fr);
-    grid-template-columns: auto;
+@each $breakpoint in map.keys(bp.$breakpoints) {
+  @include bp.respond-to($breakpoint) {
+    @for $n from 1 through 9 {
+      .#{$breakpoint}\:grid-cols-#{$n} {
+        grid-template-columns: repeat($n, 1fr);
+      }
+      .#{$breakpoint}\:grid-rows-#{$n} {
+        grid-template-rows: repeat($n, 1fr);
+      }
+    }
   }
 }

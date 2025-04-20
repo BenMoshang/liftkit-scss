@@ -1,222 +1,221 @@
+@use 'sass:math';
+@use 'globals';
+@use 'margins';
 
-@use "sass:list";
-@use "sass:math";
-@use "sass:map";
+/* =============================================================================
+   TYPOGRAPHY 2.1 • Placeholder‑driven, mobile‑first
+   ============================================================================*/
 
-@use "globals";
-@use "margins";
-
-$TYPE-STYLES: (
-    "regular",
-    "bold"
-);
-$TYPE-SCALES: (
-    "display-1": (
-        "regular": (
-            "size": globals.$SIZE-2XL,
-            "height": globals.$MAJOR-QUARTER,
-            "spacing": -0.022em
-        ),
-        "bold": (
-            "weight": 700
-        )
-    ),
-    "display-2": (
-        "regular": (
-            "size": globals.$SIZE-XL * globals.$MAJOR-HALF,
-            "spacing": -0.022em
-        ),
-        "bold": (
-            "weight": 700
-        )
-    ),
-    "title-a": (
-        "regular": (
-            "size": globals.$SIZE-LG * globals.$MAJOR-HALF,
-            "spacing": -0.022em
-        ),
-        "bold": (
-            "weight": 700
-        )
-    ),
-    "title-b": (
-        "regular": (
-            "size": globals.$SIZE-LG,
-            "spacing": -0.02em
-        )
-    ),
-    "title-c": (
-        "regular": (
-            "size": math.div(globals.$SIZE-LG, globals.$MAJOR-HALF),
-            "spacing": -0.017em
-        )
-    ),
-    "heading": (
-        "regular": (
-            "size": globals.$SIZE-MD * globals.$MAJOR-QUARTER,
-            "spacing": -0.014em,
-            "weight": 600
-        ),
-        "bold": (
-            "weight": 700
-        )
-    ),
-    "subheading": (
-        "regular": (
-            "size": math.div(globals.$SIZE-MD, globals.$MAJOR-QUARTER),
-            "spacing": -0.007em
-        )
-    ),
-    "body": (
-        "regular": (
-            "size": globals.$SIZE-MD,
-            "height": globals.$MAJOR,
-            "spacing": -0.011em
-        )
-    ),
-    "callout": (
-        "regular": (
-            "size": math.div(globals.$SIZE-MD, globals.$MAJOR-EIGHT),
-            "spacing": -0.009em
-        )
-    ),
-    "label": (
-        "regular": (
-            "size": math.div(math.div(globals.$SIZE-MD, globals.$MAJOR-QUARTER), globals.$MAJOR-EIGHT),
-            "spacing": -0.004em,
-            "weight": 600,
-        ),
-        "bold": (
-            "weight": 700,
-        )
-    ),
-    "caption": (
-        "regular": (
-            "size": math.div(globals.$SIZE-MD, globals.$MAJOR-HALF),
-            "spacing": -0.007em
-        )
-    ),
-    "overline": (
-        "regular": (
-            "size": math.div(math.div(globals.$SIZE-MD, globals.$MAJOR-QUARTER), globals.$MAJOR-EIGHT),
-            "spacing": 1em * math.div(globals.$MINOR, 10)
-        )
-    )
-);
-
-@function lookup($type-scale, $type-style, $type-property, $optional: false) {
-  @if type-of($type-property) != string {
-    @error "#{$type-property} is not a string";
-  }
-  @if list.index($TYPE-STYLES, $type-style) == null {
-    @error "#{$type-style} is not a valid type style";
-  }
-  $property: map.get($TYPE-SCALES, $type-scale, $type-style, $type-property);
-  @if $property == null {
-    @if not $optional {
-      @error "#{$type-property} is not a valid property of #{$type-style} #{$type-scale}";
-    }
-  }
-  @return $property;
-}
-
-@mixin declare($type-scale) {
-  $line-height: lookup($type-scale, "regular", "height", true);
-  @if $line-height == null {
-    $line-height: globals.$MAJOR-HALF; // default
-  } @else {
+/* ─────────────────────── 1) Helpers ─────────────────────── */
+@mixin type-scale($size, $spacing, $line-height: null, $weight: 400) {
+  @if $line-height != null {
     @include margins.adjust-to($line-height);
   }
-  font-size: globals.round-to(lookup($type-scale, "regular", "size"));
-  line-height: globals.round-to($line-height);
-  letter-spacing: globals.round-to(lookup($type-scale, "regular", "spacing"));
 
-  $font-weight: lookup($type-scale, "regular", "weight", true);
-  @if $font-weight != null {
-    font-weight: globals.round-to($font-weight);
-  }
-
-  &--bold {
-    $font-weight: lookup($type-scale, "bold", "weight", true);
-    @if $font-weight == null {
-      $font-weight: 600; // default
-    }
-    font-weight: globals.round-to($font-weight);
-  }
+  font-size: globals.round-to($size);
+  line-height: globals.round-to(
+    if($line-height, $line-height, globals.$MAJOR-HALF)
+  );
+  letter-spacing: $spacing;
+  font-weight: $weight;
 }
 
+/* ─────────────────────── 2) Placeholders ─────────────────────── */
+
+/* Display 1 – base = smallest phones */
+%display-1 {
+  @include type-scale(globals.$SIZE-XL, -0.022em);
+}
+%display-1--bold {
+  @extend %display-1;
+  font-weight: 700;
+}
+
+/* Display 2 */
+%display-2 {
+  @include type-scale(globals.$SIZE-LG * globals.$MAJOR-HALF, -0.022em);
+}
+%display-2--bold {
+  @extend %display-2;
+  font-weight: 700;
+}
+
+/* Title A */
+%title-a {
+  @include type-scale(globals.$SIZE-LG * globals.$MAJOR-QUARTER, -0.022em);
+}
+%title-a--bold {
+  @extend %title-a;
+  font-weight: 700;
+}
+
+/* Title B */
+%title-b {
+  @include type-scale(globals.$SIZE-LG, -0.02em);
+}
+
+/* Title C */
+%title-c {
+  @include type-scale(
+    math.div(globals.$SIZE-LG, globals.$MAJOR-HALF),
+    -0.017em
+  );
+}
+
+/* Heading */
+%heading {
+  @include type-scale(
+    globals.$SIZE-MD * globals.$MAJOR-QUARTER,
+    -0.014em,
+    null,
+    600
+  );
+}
+%heading--bold {
+  @extend %heading;
+  font-weight: 700;
+}
+
+/* Subheading */
+%subheading {
+  @include type-scale(
+    math.div(globals.$SIZE-MD, globals.$MAJOR-QUARTER),
+    -0.007em
+  );
+}
+
+/* Body */
+%body {
+  @include type-scale(globals.$SIZE-MD, -0.011em, globals.$MAJOR);
+}
+
+/* Callout */
+%callout {
+  @include type-scale(
+    math.div(globals.$SIZE-MD, globals.$MAJOR-EIGHT),
+    -0.009em
+  );
+}
+
+/* Label */
+%label {
+  @include type-scale(
+    math.div(
+      math.div(globals.$SIZE-MD, globals.$MAJOR-QUARTER),
+      globals.$MAJOR-EIGHT
+    ),
+    -0.004em,
+    null,
+    600
+  );
+}
+%label--bold {
+  @extend %label;
+  font-weight: 700;
+}
+
+/* Caption */
+%caption {
+  @include type-scale(
+    math.div(globals.$SIZE-MD, globals.$MAJOR-HALF),
+    -0.007em
+  );
+}
+
+/* Overline */
+%overline {
+  @include type-scale(
+    math.div(
+      math.div(globals.$SIZE-MD, globals.$MAJOR-QUARTER),
+      globals.$MAJOR-EIGHT
+    ),
+    1em * math.div(globals.$MINOR, 10)
+  );
+  text-transform: uppercase;
+}
+
+/* ─────────────────────── 3) Root baseline ─────────────────────── */
 :root {
   @include margins.adjust-to(globals.$MAJOR-HALF);
-
-  font: #{globals.round-to(globals.$SIZE-MD)} / #{globals.round-to(globals.$MAJOR-HALF)} "Inter", "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+  font:
+    #{globals.round-to(globals.$SIZE-MD)} /
+      #{globals.round-to(globals.$MAJOR-HALF)} 'Inter',
+    'Segoe UI',
+    'Helvetica Neue',
+    'Arial',
+    sans-serif;
 }
 
+/* ─────────────────────── 4) Utility classes ─────────────────────── */
 .display-1 {
-  @include declare("display-1");
+  @extend %display-1;
 }
-
+.display-1--bold {
+  @extend %display-1--bold;
+}
 .display-2 {
-  @include declare("display-2");
+  @extend %display-2;
 }
-
+.display-2--bold {
+  @extend %display-2--bold;
+}
 .title-a {
-  @include declare("title-a");
+  @extend %title-a;
 }
-
+.title-a--bold {
+  @extend %title-a--bold;
+}
 .title-b {
-  @include declare("title-b");
+  @extend %title-b;
 }
-
 .title-c {
-  @include declare("title-c");
+  @extend %title-c;
 }
-
 .heading {
-  @include declare("heading");
+  @extend %heading;
 }
-
+.heading--bold {
+  @extend %heading--bold;
+}
 .subheading {
-  @include declare("subheading");
+  @extend %subheading;
 }
-
 .body {
-  @include declare("body");
+  @extend %body;
 }
-
 .callout {
-  @include declare("callout");
+  @extend %callout;
 }
-
 .label {
-  @include declare("label");
+  @extend %label;
 }
-
+.label--bold {
+  @extend %label--bold;
+}
 .caption {
-  @include declare("caption");
+  @extend %caption;
 }
-
 .overline {
-  @include declare("overline");
+  @extend %overline;
 }
 
-@media screen and (max-width: 767px) {
-
+/* ─────────────────────── 5) Mobile‑first media queries ─────────────────────── */
+/* ≥ 30 rem  (~480 px) — small tablets / large phones */
+@media (min-width: 30rem) {
   .display-1 {
     font-size: globals.round-to(globals.$SIZE-XL * globals.$MAJOR-HALF);
   }
-}
-
-@media screen and (max-width: 479px) {
-
-  .display-1 {
-    font-size: globals.round-to(globals.$SIZE-XL);
-  }
-
   .display-2 {
+    font-size: globals.round-to(globals.$SIZE-XL * globals.$MAJOR-HALF);
+  }
+  .title-a {
     font-size: globals.round-to(globals.$SIZE-LG * globals.$MAJOR-HALF);
   }
+}
 
-  .title-a {
-    font-size: globals.round-to(globals.$SIZE-LG * globals.$MAJOR-QUARTER);
+/* ≥ 48 rem  (~768 px) — tablets & up */
+@media (min-width: 48rem) {
+  .display-1 {
+    @include type-scale(globals.$SIZE-2XL, -0.022em, globals.$MAJOR-QUARTER);
   }
 }

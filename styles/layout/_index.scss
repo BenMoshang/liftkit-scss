@@ -1,0 +1,9 @@
+// ===========================================================================
+// styles/layout/_index.scss
+// Central index forwarding layout utilities.
+// ===========================================================================
+@forward 'containers';
+@forward 'flex';
+@forward 'grids';
+@forward 'sections';
+@forward 'stacks';

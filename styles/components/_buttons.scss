@@ -1,83 +1,114 @@
 // styles/components/_buttons.scss
-@use 'sass:math';
+// --------------------------------------------------------------
+// Button Component
+// --------------------------------------------------------------
+/**
+ * Accessible, themeable button with variants and icon support.
+ * - Supports fill & outline modes
+ * - Configurable sizes via modifiers
+ * - Icon padding helpers
+ * - Uses golden ratio pacing for vertical/horizontal spacing
+ * Usage: <button class="button button--fill button--large button--start-icon">...
+ */
 
-@use '../base/globals'; // Adjusted path relative to new location if needed
-@use '../appearance/colors'; // Adjusted path
-@use '../sizing/scale'; // Adjusted path
-// @use "../components/boxes"; // Removed as boxes mixin is not needed or file is missing
+@use 'sass:math';
+@use '../base/globals';
+@use '../appearance/colors';
+@use '../sizing/scale';
+
+// Golden ratio split (√φ) for vertical spacing
+$btn-ratio: globals.round-to(globals.$MAJOR-HALF);
+
+// Button size configurations: name => ( font, pad-vert, pad-horiz )
+$btn-sizes: (
+  md: (
+    font: globals.inline-size('md'),
+    pv: globals.inline-size('sm'),
+    ph: globals.inline-size('md'),
+  ),
+  lg: (
+    font: globals.round-to(globals.inline-size('md') * globals.$MAJOR-QUARTER),
+    pv: globals.inline-size('md'),
+    ph: globals.inline-size('lg'),
+  ),
+);
+
+// Icon padding map: pos => ( left-key, right-key )
+$btn-icon-map: (
+  start: (
+    'sm',
+    'md',
+  ),
+  end: (
+    'md',
+    'sm',
+  ),
+);
+
+// Mixin: apply size config
+@mixin btn-size($key) {
+  $cfg: map-get($btn-sizes, $key);
+  font-size: globals.round-to(map-get($cfg, font));
+  $pv: map-get($cfg, pv);
+  $ph: map-get($cfg, ph);
+  padding: globals.round-to(math.div($pv, globals.$MAJOR-HALF))
+    globals.round-to($ph);
+}
+
+// Mixin: icon padding helper
+@mixin btn-icon($pos) {
+  $cfg: map-get($btn-icon-map, $pos);
+  padding-left: globals.round-to(globals.inline-size(nth($cfg, 1)));
+  padding-right: globals.round-to(globals.inline-size(nth($cfg, 2)));
+}
 
 .button {
-  // @include colors.fg__primary;
-  // Use foreground color mixin
-
+  // Base appearance
+  @include colors.fg__primary;
   position: relative;
-  display: inline-block;
-  overflow: hidden;
-  // Base padding using golden ratio increments related to MD size
-  padding: globals.round-to(math.div(globals.inline-size('sm'), globals.$MAJOR-HALF))
-    globals.round-to(globals.inline-size('md'));
-  text-decoration: none;
-
-  border: 1px solid transparent;
-  border-radius: 9999px; // round
-  background-color: transparent;
-  cursor: pointer; // Ensure pointer cursor
-  touch-action: manipulation; // Improve mobile interaction
-
-  &--fill {
-    // @include colors.bg__primary;
-    // Use background color mixin
-  }
-
-  &--outline {
-    border-color: var(--outline); // Use outline variable directly
-  }
-
-  // Padding adjustments for icons using standard sizes
-  &--start-icon {
-    padding-right: globals.round-to(
-      globals.inline-size('md')
-    ); // Keep right padding standard
-    padding-left: globals.round-to(
-      globals.inline-size('sm')
-    ); // Reduce left padding for icon
-  }
-
-  &--end-icon {
-    padding-right: globals.round-to(
-      globals.inline-size('sm')
-    ); // Reduce right padding for icon
-    padding-left: globals.round-to(
-      globals.inline-size('md')
-    ); // Keep left padding standard
-  }
-
-  // Specific size modifier
-  &--large {
-    // Use a slightly larger base font size, padding will scale relatively
-    font-size: globals.round-to(
-      globals.inline-size('md') * globals.$MAJOR-QUARTER
-    ); // Slightly larger than MD
-    padding: globals.round-to(math.div(globals.inline-size('md'), globals.$MAJOR-HALF))
-      globals.round-to(globals.inline-size('lg')); // Adjust padding accordingly
-  }
-}
-
-.button__content {
-  // Use the refactored horizontal box mixin with appropriate gap
-  // @include boxes.h-box(sm); // Use 'sm' gap size from the box scale
-
-  display: inline-flex; // Ensure content wrapper is inline-flex for proper alignment
+  display: inline-flex;
   align-items: center;
-  justify-content: center; // Center content within the button
-  vertical-align: middle; // Align inline-flex container properly if needed
+  justify-content: center;
+  overflow: hidden;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background-color: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+
+  // Default size
+  @include btn-size(md);
+
+  // Variants
+  &--fill {
+    @include colors.bg__primary;
+    @include colors.fg__on-primary;
+  }
+  &--outline {
+    @include colors.fg__primary;
+    border-color: var(--outline);
+  }
+
+  // Icon modifiers
+  @each $pos in map-keys($btn-icon-map) {
+    &--#{$pos}-icon {
+      @include btn-icon($pos);
+    }
+  }
+
+  // Size modifiers
+  @each $size in map-keys($btn-sizes) {
+    &--#{$size} {
+      @include btn-size($size);
+    }
+  }
 }
 
+// Content and icon wrappers
+.button__content,
 .button__icon {
-  // Use the generic size mixin from sizing/scale
-  @include scale.inline-size(width, sm);
-  @include scale.inline-size(height, sm);
-  display: inline-flex; // Ensure icon itself is flex for centering if it's an SVG wrapper
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }

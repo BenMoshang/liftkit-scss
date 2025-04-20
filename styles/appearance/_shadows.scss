@@ -68,3 +68,10 @@ $_shadow-definitions: (
   }
   @extend %shadow__#{$size};
 }
+
+// 4. Shadow utility classes
+@each $name in map.keys($_shadow-definitions) {
+  .shadow-#{$name} {
+    @include apply-shadow($name);
+  }
+}

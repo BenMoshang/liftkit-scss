@@ -1,38 +1,32 @@
 @use 'sass:math';
-
 @use '../base/globals';
 
 $_WIDTH: 75rem;
 
-.container {
+// 1. Consolidated container scales
+$container-scales: (
+  xs: math.div(1, globals.$MAJOR-HALF),
+  sm: math.div(1, globals.$MAJOR-QUARTER),
+  md: 1,
+  lg: globals.$MAJOR-QUARTER,
+  xl: globals.$MAJOR-HALF,
+);
+
+// 2. Container base mixin
+@mixin container-base {
   margin-inline: auto;
-  &__xs {
-    @extend .container;
+}
 
-    max-width: round(math.div($_WIDTH, globals.$MAJOR-HALF));
-  }
+// 3. Default container (md)
+.container {
+  @include container-base();
+  max-width: round($_WIDTH * map.get($container-scales, md));
+}
 
-  &__sm {
-    @extend .container;
-
-    max-width: round(math.div($_WIDTH, globals.$MAJOR-QUARTER));
-  }
-
-  &__md {
-    @extend .container;
-
-    max-width: #{$_WIDTH};
-  }
-
-  &__lg {
-    @extend .container;
-
-    max-width: round($_WIDTH * globals.$MAJOR-QUARTER);
-  }
-
-  &__xl {
-    @extend .container;
-
-    max-width: round($_WIDTH * globals.$MAJOR-HALF);
+// 4. Responsive container modifiers
+@each $key, $scale in $container-scales {
+  .container__#{$key} {
+    @include container-base();
+    max-width: round($_WIDTH * $scale);
   }
 }

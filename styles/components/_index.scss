@@ -1,0 +1,7 @@
+// ===========================================================================
+// styles/components/_index.scss
+// Central index forwarding component styles.
+// ===========================================================================
+@forward 'buttons';
+@forward 'cards';
+@forward 'components/*';

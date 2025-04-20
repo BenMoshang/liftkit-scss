@@ -1,25 +1,47 @@
 // styles/components/_cards.scss
+// --------------------------------------------------------------
+// Cards Component
+// --------------------------------------------------------------
+/**
+ * Responsive card component with dynamic padding and border-radius
+ * based on typography scale. It sets CSS variable --card-scale-factor
+ * to adjust spacing relative to content size. Supports automatic
+ * detection via :has() and explicit modifier classes.
+ * Requires browser support for CSS :has(): https://caniuse.com/css-has
+ */
+
 @use 'sass:math';
+@use '../base/globals';
+@use '../appearance/colors';
+@use '../typography/typography';
 
-@use '../base/globals'; // Adjusted path
-@use '../appearance/colors'; // Adjusted path
-@use '../typography/typography'; // Adjusted path
+/**
+ * Map of typography scales for different content types.
+ * Keys match class names for detection (:has()) and modifier suffixes (--name).
+ */
+$card-scale-sizes: (
+  overline: globals.inline-size('3xs'),
+  caption: globals.inline-size('2xs'),
+  label: globals.inline-size('xs'),
+  callout: globals.inline-size('sm'),
+  body: globals.inline-size('md'),
+  subheading: globals.inline-size('md'),
+  heading: globals.inline-size('lg'),
+  'title-c': globals.inline-size('lg'),
+  'title-b': globals.inline-size('xl'),
+  'title-a': globals.inline-size('2xl'),
+  'display-2': globals.inline-size('3xl'),
+  'display-1': globals.inline-size('4xl'),
+);
 
-$body-regular-size: globals.inline-size('md');
-$rounded-major-half: globals.round-to(globals.$MAJOR-HALF);
-$display-1-regular-size: globals.inline-size('4xl');
-$display-2-regular-size: globals.inline-size('3xl');
-$title-a-regular-size: globals.inline-size('2xl');
-$title-b-regular-size: globals.inline-size('xl');
-$title-c-regular-size: globals.inline-size('lg');
-$heading-regular-size: globals.inline-size('lg');
-$subheading-regular-size: globals.inline-size('md');
-$body-regular-size: globals.inline-size('md');
-$callout-regular-size: globals.inline-size('sm');
-$label-regular-size: globals.inline-size('xs');
-$caption-regular-size: globals.inline-size('2xs');
-$overline-regular-size: globals.inline-size('3xs');
+/**
+ * Default scale size for fallback (body size).
+ */
+$default-scale: map-get($card-scale-sizes, body);
 
+/**
+ * Mixin sets --card-scale-factor CSS variable by rounding the given scale.
+ */
 @mixin card-scale($scale) {
   @if type-of($scale) != number {
     @error "#{$scale} is not a number";
@@ -27,116 +49,36 @@ $overline-regular-size: globals.inline-size('3xs');
   --card-scale-factor: #{globals.round-to($scale)};
 }
 
+/**
+ * Card root styles
+ */
 .card {
-  // @include colors.bg__surface;
-  // Use background mixin
-
+  @include colors.bg__surface;
   position: relative;
   overflow: hidden;
-  // Default padding based on the '--card-scale-factor' variable.
-  // Uses MAJOR-HALF ratio for vertical vs horizontal padding.
-  // Falls back to body size if no scale factor is set.
+
+  // Padding and border-radius based on scale factor
   padding: calc(
-      var(--card-scale-factor, #{$body-regular-size}) / #{$rounded-major-half}
+      var(--card-scale-factor, #{$default-scale}) /
+        #{globals.round-to(globals.$MAJOR-HALF)}
     )
-    var(--card-scale-factor, #{$body-regular-size});
+    var(--card-scale-factor, #{$default-scale});
   border-radius: calc(
-    var(--card-scale-factor, #{$body-regular-size}) / #{$rounded-major-half}
+    var(--card-scale-factor, #{$default-scale}) /
+      #{globals.round-to(globals.$MAJOR-HALF)}
   );
 
-  // --- Automatic Padding Calculation ---
-  // The following :has() selectors attempt to automatically set the --card-scale-factor
-  // based on the largest typography class present inside the card.
-  // This provides optically correct padding relative to the content size.
-  // Browser support for :has() is required. https://caniuse.com/css-has
-  // If :has() is not supported or fails, the padding falls back to being based on the 'body' font size.
-  // Alternatively, use explicit modifiers like .card--title-a to set the scale.
-  // ---
-  :where(&:has(.overline)) {
-    @include card-scale($overline-regular-size);
+  // --- Automatic detection of content scale via :has() ---
+  @each $name, $size in $card-scale-sizes {
+    :where(&:has(.#{$name})) {
+      @include card-scale($size);
+    }
   }
 
-  :where(&:has(.caption)) {
-    @include card-scale($caption-regular-size);
-  }
-
-  :where(&:has(.label)) {
-    @include card-scale($label-regular-size);
-  }
-
-  :where(&:has(.callout)) {
-    @include card-scale($callout-regular-size);
-  }
-
-  :where(&:has(.body)) {
-    @include card-scale($body-regular-size);
-  }
-
-  :where(&:has(.subheading)) {
-    @include card-scale($subheading-regular-size);
-  }
-
-  :where(&:has(.heading)) {
-    @include card-scale($heading-regular-size);
-  }
-
-  :where(&:has(.title-c)) {
-    @include card-scale($title-c-regular-size);
-  }
-
-  :where(&:has(.title-b)) {
-    @include card-scale($title-b-regular-size);
-  }
-
-  :where(&:has(.title-a)) {
-    @include card-scale($title-a-regular-size);
-  }
-
-  :where(&:has(.display-2)) {
-    @include card-scale($display-2-regular-size);
-  }
-
-  :where(&:has(.display-1)) {
-    @include card-scale($display-1-regular-size);
-  }
-
-  // --- Explicit Padding Modifiers ---
-  // Use these classes to manually set the padding scale if automatic detection
-  // is not desired or not supported.
-  &--display-1 {
-    @include card-scale($display-1-regular-size);
-  }
-  &--display-2 {
-    @include card-scale($display-2-regular-size);
-  }
-  &--title-a {
-    @include card-scale($title-a-regular-size);
-  }
-  &--title-b {
-    @include card-scale($title-b-regular-size);
-  }
-  &--title-c {
-    @include card-scale($title-c-regular-size);
-  }
-  &--heading {
-    @include card-scale($heading-regular-size);
-  }
-  &--subheading {
-    @include card-scale($subheading-regular-size);
-  }
-  &--body {
-    @include card-scale($body-regular-size);
-  }
-  &--callout {
-    @include card-scale($callout-regular-size);
-  }
-  &--label {
-    @include card-scale($label-regular-size);
-  }
-  &--caption {
-    @include card-scale($caption-regular-size);
-  }
-  &--overline {
-    @include card-scale($overline-regular-size);
+  // --- Explicit modifier classes for manual scale ---
+  @each $name, $size in $card-scale-sizes {
+    &--#{$name} {
+      @include card-scale($size);
+    }
   }
 }
