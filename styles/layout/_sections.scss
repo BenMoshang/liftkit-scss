@@ -1,35 +1,61 @@
-@use "globals";
+@use '../base/globals' as globals;
 
 $section-sizes: (
-  xs: (tb: globals.$SIZE-LG,     rl: globals.$SIZE-2XL),
-  sm: (tb: globals.$SIZE-XL,     rl: globals.$SIZE-2XL),
-  md: (tb: globals.$SIZE-2XL,    rl: globals.$SIZE-2XL),
-  lg: (tb: globals.$SIZE-3XL,    rl: globals.$SIZE-2XL),
-  xl: (tb: globals.$SIZE-4XL,    rl: globals.$SIZE-2XL)
+  xs: (
+    tb: globals.inline-size('lg'),
+    rl: globals.inline-size('2xl'),
+  ),
+  sm: (
+    tb: globals.inline-size('xl'),
+    rl: globals.inline-size('2xl'),
+  ),
+  md: (
+    tb: globals.inline-size('2xl'),
+    rl: globals.inline-size('2xl'),
+  ),
+  lg: (
+    tb: globals.inline-size('3xl'),
+    rl: globals.inline-size('2xl'),
+  ),
+  xl: (
+    tb: globals.inline-size('4xl'),
+    rl: globals.inline-size('2xl'),
+  ),
 );
 
 @each $alias, $sizes in $section-sizes {
   .section__#{$alias} {
-    padding: globals.round-to(map-get($sizes, tb)) globals.round-to(map-get($sizes, rl));
+    padding: globals.round-to(map-get($sizes, tb))
+      globals.round-to(map-get($sizes, rl));
   }
 }
 
 @media screen and (max-width: 61.9375rem) {
   .section__xs,
   .section__sm {
-    padding-right: globals.round-to(globals.$SIZE-LG);
-    padding-left:  globals.round-to(globals.$SIZE-LG);
+    padding-inline: globals.round-to(globals.inline-size('lg'));
+
   }
 
   $mobile-sizes: (
-    md: (tb: globals.$SIZE-XL, rl: globals.$SIZE-LG),
-    lg: (tb: globals.$SIZE-2XL, rl: globals.$SIZE-LG),
-    xl: (tb: globals.$SIZE-3XL, rl: globals.$SIZE-LG * globals.$MAJOR-HALF)
+    md: (
+      tb: globals.inline-size('xl'),
+      rl: globals.inline-size('lg'),
+    ),
+    lg: (
+      tb: globals.inline-size('2xl'),
+      rl: globals.inline-size('lg'),
+    ),
+    xl: (
+      tb: globals.inline-size('3xl'),
+      rl: globals.inline-size('lg') * globals.$MAJOR-HALF,
+    ),
   );
 
   @each $alias, $sizes in $mobile-sizes {
     .section__#{$alias} {
-      padding: globals.round-to(map-get($sizes, tb)) globals.round-to(map-get($sizes, rl));
+      padding: globals.round-to(map-get($sizes, tb))
+        globals.round-to(map-get($sizes, rl));
     }
   }
 }

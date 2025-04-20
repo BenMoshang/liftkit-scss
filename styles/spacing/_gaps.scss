@@ -1,0 +1,45 @@
+// Central gap logic and utilities moved from _flex.scss
+@use '../base/globals';
+@use 'sass:map';
+@use 'sass:string';
+@use 'sass:meta';
+
+// 1. Define Gap Sizes Map
+$flex-gap-sizes: (
+  'xs': globals.round-to(globals.inline-size('2xs') * globals.$MAJOR-HALF),
+  'sm': globals.round-to(globals.inline-size('xs') * globals.$MAJOR-HALF),
+  'md': globals.round-to(globals.inline-size('sm') * globals.$MAJOR-HALF),
+  'lg': globals.round-to(globals.inline-size('md') * globals.$MAJOR-HALF),
+  'xl': globals.round-to(globals.inline-size('lg') * globals.$MAJOR-HALF),
+  '2xl': globals.round-to(globals.inline-size('xl') * globals.$MAJOR-HALF),
+);
+
+$valid-gap-keys: map.keys($flex-gap-sizes);
+
+// 2. Gap Application Mixin (Internal Helper)
+@mixin _apply-flex-gap($size-key: null) {
+  @if $size-key != null {
+    $key-string: null;
+    @if meta.type-of($size-key) == string {
+      $key-string: string.unquote($size-key);
+    } @else {
+      @warn "Invalid type '#{meta.type-of($size-key)}' provided for gap size key. Expected an unquoted string like 'md' or quoted string like '"md"'.";
+    }
+    $is-valid-key: false;
+    @each $valid-key in $valid-gap-keys {
+      @if $key-string == $valid-key {
+        $is-valid-key: true;
+      }
+    }
+    @if $is-valid-key {
+      gap: map.get($flex-gap-sizes, $key-string);
+    } @else {
+      @warn "Invalid gap size key '#{$key-string}' provided. Valid keys are: #{$valid-gap-keys}.";
+    }
+  }
+}
+
+// 3. Public gap mixin
+@mixin gap($gap-size: null) {
+  @include _apply-flex-gap($gap-size);
+}

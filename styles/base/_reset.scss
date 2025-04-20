@@ -2,7 +2,7 @@
    1. Imports
    ========================================================================== */
 
-@use "colors";
+@use '../appearance/colors';
 
 /* ==========================================================================
    2. Global Resets & Base Styles
@@ -15,23 +15,24 @@
 }
 
 html {
-	min-block-size: 100svh;
-	inline-size: 100%;
+  min-block-size: 100svh;
+  inline-size: 100%;
   scroll-behavior: smooth;
   scrollbar-track-color: var(--surface);
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--surface);
   /* Base setup */
-  
-/* Enable keyword animations for users who don't prefer reduced motion */
-@media (prefers-reduced-motion: no-preference) {
-    interpolate-size: allow-keywords;
-}
-}
 
+  /* Enable keyword animations for users who don't prefer reduced motion */
+  @media (prefers-reduced-motion: no-preference) {
+    interpolate-size: allow-keywords;
+  }
+}
 
 body {
-  @include colors.bg__background; /* Apply background color from colors module */
+  background-color: var(
+    --background
+  ); /* Use CSS custom property for background */
   overflow-x: clip; /* Prevent horizontal scrolling */
   margin: 0; /* Remove default body margin */
 
@@ -136,7 +137,8 @@ p {
 }
 
 :where(a:active, a:hover, a:focus-visible) {
-  @include colors.fg__primary; /* Apply primary foreground color on interaction */
+  // @include colors.fg__primary;
+  /* Apply primary foreground color on interaction */
 }
 
 /* ==========================================================================
@@ -153,16 +155,15 @@ p {
 button,
 [role='button'],
 select {
-	cursor: pointer;
-	touch-action: manipulation;
+  cursor: pointer;
+  touch-action: manipulation;
 }
-
 
 ::-webkit-scrollbar-track {
   background: var(--surface);
 }
 ::-webkit-scrollbar-thumb {
   background-color: var(--primary);
-  border-radius: .25rem;
-  border: .125rem solid var(--surface);
+  border-radius: 0.25rem;
+  border: 0.125rem solid var(--surface);
 }

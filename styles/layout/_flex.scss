@@ -1,24 +1,11 @@
-// styles/components/_boxes.scss
+// styles/layout/_flex.scss
 
 // Import necessary modules using the modern @use rule
-@use "../base/globals";
-@use "sass:map";
-@use "sass:string"; // Import string module for potential manipulation if needed
-@use "sass:meta";   // Import meta module for type checking
-
-// 1. Define Gap Sizes Map
-// Centralizes the gap size calculations based on global variables.
-$flex-gap-sizes: (
-  "xs":  globals.round-to(globals.$SIZE-2XS * globals.$MAJOR-HALF),
-  "sm":  globals.round-to(globals.$SIZE-XS * globals.$MAJOR-HALF),
-  "md":  globals.round-to(globals.$SIZE-SM * globals.$MAJOR-HALF),
-  "lg":  globals.round-to(globals.$SIZE-MD * globals.$MAJOR-HALF),
-  "xl":  globals.round-to(globals.$SIZE-LG * globals.$MAJOR-HALF),
-  "2xl": globals.round-to(globals.$SIZE-XL * globals.$MAJOR-HALF)
-);
-
-// Store valid keys for easier checking
-$valid-gap-keys: map.keys($flex-gap-sizes);
+@use '../base/globals';
+@use 'sass:map';
+@use 'sass:string'; // Import string module for potential manipulation if needed
+@use 'sass:meta'; // Import meta module for type checking
+@use '../spacing/gaps' as gaps; // Import gap mixin from spacing
 
 // 2. Core Flex Container Mixin (Internal Helper - Unchanged)
 @mixin _flex-container($direction: row, $display: flex) {
@@ -26,57 +13,15 @@ $valid-gap-keys: map.keys($flex-gap-sizes);
   flex-direction: $direction;
 }
 
-// 3. Gap Application Mixin (Internal Helper - Updated)
-// Handles applying the gap, now robustly accepting unquoted keys
-// and strictly validating against the allowed keys.
-@mixin _apply-flex-gap($size-key: null) {
-  // Proceed only if a size key is actually provided
-  @if $size-key != null {
-    $key-string: null;
-
-    // Check the type of the input key
-    @if meta.type-of($size-key) == string {
-      // If it's already a string (quoted or unquoted that Sass treats as string)
-      $key-string: string.unquote($size-key); // Ensure it's unquoted for consistent checking
-    } @else {
-      // If it's some other type (e.g., number, list), it's invalid for our map keys
-      @warn "Invalid type '#{meta.type-of($size-key)}' provided for gap size key. Expected an unquoted string like 'md' or quoted string like '\"md\"'.";
-      // Exit the mixin if the type is wrong
-      @return;
-    }
-
-    // Validate the string key against the allowed keys
-    $is-valid-key: false;
-    @each $valid-key in $valid-gap-keys {
-      @if $key-string == $valid-key {
-        $is-valid-key: true;
-      }
-    }
-
-    // Apply the gap only if the key is valid
-    @if $is-valid-key {
-      gap: map.get($flex-gap-sizes, $key-string);
-    } @else {
-      // Warn if the key string is not one of the allowed values
-      @warn "Invalid gap size key '#{$key-string}' provided. Valid keys are: #{$valid-gap-keys}.";
-    }
-  }
-  // No 'else' needed; if $size-key is null, no gap is applied.
-}
-
 // --- Public Mixins (Definitions Unchanged) ---
 // The public mixins remain the same; the change is in the internal helper they call.
-@mixin gap($gap-size: null) {
-  @include _apply-flex-gap($gap-size);
-  
-}
 /**
  * Creates a horizontal block-level flex container.
  * @param {String | Null} $gap-size [null] - Optional gap size key (xs, sm, md, lg, xl, 2xl). Accepts quoted or unquoted.
  */
 @mixin flex-row($gap-size: null) {
   @include _flex-container(row, flex);
-  @include _apply-flex-gap($gap-size);
+  @include gaps.gap($gap-size);
 }
 
 /**
@@ -85,7 +30,7 @@ $valid-gap-keys: map.keys($flex-gap-sizes);
  */
 @mixin flex-col($gap-size: null) {
   @include _flex-container(column, flex);
-  @include _apply-flex-gap($gap-size);
+  @include gaps.gap($gap-size);
 }
 
 /**
@@ -94,7 +39,7 @@ $valid-gap-keys: map.keys($flex-gap-sizes);
  */
 @mixin inline-flex-row($gap-size: null) {
   @include _flex-container(row, inline-flex);
-  @include _apply-flex-gap($gap-size);
+  @include gaps.gap($gap-size);
 }
 
 /**
@@ -103,5 +48,5 @@ $valid-gap-keys: map.keys($flex-gap-sizes);
  */
 @mixin inline-flex-col($gap-size: null) {
   @include _flex-container(column, inline-flex);
-  @include _apply-flex-gap($gap-size);
+  @include gaps.gap($gap-size);
 }

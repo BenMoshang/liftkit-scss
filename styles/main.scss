@@ -1,34 +1,34 @@
 // styles/main.scss
 
 // ---- BASE ----
-@use "base/globals";
-@use "base/resets"; // Added reset import for completeness
+@use 'base/globals' as globals;
+@use 'base/resets'; // Added reset import for completeness
 
 // ---- LAYOUT ----
-@use "layout/containers";
-@use "layout/grids";
-@use "layout/sections";
-@use "layout/stacks";
+@use 'layout/containers';
+@use 'layout/grids';
+@use 'layout/sections';
+@use 'layout/stacks';
+@use 'layout/flex';
 
 // ---- SPACING ----
-@use "spacing/margins";
+@use 'spacing/margins';
 
 // ---- TYPOGRAPHY ----
-@use "typography/typography";
+@use 'typography/typography';
 
 // ---- APPEARANCE ----
-@use "appearance/colors";
-@use "appearance/shadows";
+@use 'appearance/colors';
+@use 'appearance/shadows';
 
 // ---- SIZING ----
-@use "sizing/scale";
+@use 'sizing/scale';
 
 // ---- INTERACTIVITY ----
 // Updated path
-@use "interactivity/state-layers";
+@use 'state/state-layers';
 
 // ---- COMPONENTS ----
 // Updated path/name to match refactored file
-@use "components/boxes";
-@use "components/cards";
-@use "components/buttons";
+@use 'components/cards';
+@use 'components/buttons';

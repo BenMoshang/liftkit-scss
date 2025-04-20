@@ -199,14 +199,14 @@ $TYPE-SCALES: (
   @include declare("overline");
 }
 
-@media screen and (max-width: 47.9375rem) {
+@media screen and (max-width: 767px) {
 
   .display-1 {
     font-size: globals.round-to(globals.$SIZE-XL * globals.$MAJOR-HALF);
   }
 }
 
-@media screen and (max-width: 29.9375rem) {
+@media screen and (max-width: 479px) {
 
   .display-1 {
     font-size: globals.round-to(globals.$SIZE-XL);

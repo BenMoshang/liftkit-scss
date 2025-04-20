@@ -1,12 +1,11 @@
+@use 'sass:math';
 
-@use "sass:math";
+@use '../base/globals';
 
-@use "globals";
-
-$_WIDTH: 75rem; 
+$_WIDTH: 75rem;
 
 .container {
-margin-inline: auto;
+  margin-inline: auto;
   &__xs {
     @extend .container;
 

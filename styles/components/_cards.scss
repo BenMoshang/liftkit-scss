@@ -1,9 +1,24 @@
 // styles/components/_cards.scss
-@use "sass:math";
+@use 'sass:math';
 
-@use "../base/globals"; // Adjusted path
-@use "../appearance/colors"; // Adjusted path
-@use "../typography/typography"; // Adjusted path
+@use '../base/globals'; // Adjusted path
+@use '../appearance/colors'; // Adjusted path
+@use '../typography/typography'; // Adjusted path
+
+$body-regular-size: globals.inline-size('md');
+$rounded-major-half: globals.round-to(globals.$MAJOR-HALF);
+$display-1-regular-size: globals.inline-size('4xl');
+$display-2-regular-size: globals.inline-size('3xl');
+$title-a-regular-size: globals.inline-size('2xl');
+$title-b-regular-size: globals.inline-size('xl');
+$title-c-regular-size: globals.inline-size('lg');
+$heading-regular-size: globals.inline-size('lg');
+$subheading-regular-size: globals.inline-size('md');
+$body-regular-size: globals.inline-size('md');
+$callout-regular-size: globals.inline-size('sm');
+$label-regular-size: globals.inline-size('xs');
+$caption-regular-size: globals.inline-size('2xs');
+$overline-regular-size: globals.inline-size('3xs');
 
 @mixin card-scale($scale) {
   @if type-of($scale) != number {
@@ -13,15 +28,21 @@
 }
 
 .card {
-  @include colors.bg__surface; // Use background mixin
+  // @include colors.bg__surface;
+  // Use background mixin
 
   position: relative;
   overflow: hidden;
   // Default padding based on the '--card-scale-factor' variable.
   // Uses MAJOR-HALF ratio for vertical vs horizontal padding.
   // Falls back to body size if no scale factor is set.
-  padding: calc(var(--card-scale-factor, #{globals.lookup("body", "regular", "size")}) / #{globals.round-to(globals.$MAJOR-HALF)}) var(--card-scale-factor, #{globals.lookup("body", "regular", "size")});
-  border-radius: calc(var(--card-scale-factor, #{globals.lookup("body", "regular", "size")}) / #{globals.round-to(globals.$MAJOR-HALF)});
+  padding: calc(
+      var(--card-scale-factor, #{$body-regular-size}) / #{$rounded-major-half}
+    )
+    var(--card-scale-factor, #{$body-regular-size});
+  border-radius: calc(
+    var(--card-scale-factor, #{$body-regular-size}) / #{$rounded-major-half}
+  );
 
   // --- Automatic Padding Calculation ---
   // The following :has() selectors attempt to automatically set the --card-scale-factor
@@ -32,66 +53,90 @@
   // Alternatively, use explicit modifiers like .card--title-a to set the scale.
   // ---
   :where(&:has(.overline)) {
-    @include card-scale(globals.lookup("overline", "regular", "size"));
+    @include card-scale($overline-regular-size);
   }
 
   :where(&:has(.caption)) {
-    @include card-scale(globals.lookup("caption", "regular", "size"));
+    @include card-scale($caption-regular-size);
   }
 
   :where(&:has(.label)) {
-    @include card-scale(globals.lookup("label", "regular", "size"));
+    @include card-scale($label-regular-size);
   }
 
   :where(&:has(.callout)) {
-    @include card-scale(globals.lookup("callout", "regular", "size"));
+    @include card-scale($callout-regular-size);
   }
 
   :where(&:has(.body)) {
-    @include card-scale(globals.lookup("body", "regular", "size"));
+    @include card-scale($body-regular-size);
   }
 
   :where(&:has(.subheading)) {
-    @include card-scale(globals.lookup("subheading", "regular", "size"));
+    @include card-scale($subheading-regular-size);
   }
 
   :where(&:has(.heading)) {
-    @include card-scale(globals.lookup("heading", "regular", "size"));
+    @include card-scale($heading-regular-size);
   }
 
   :where(&:has(.title-c)) {
-    @include card-scale(globals.lookup("title-c", "regular", "size"));
+    @include card-scale($title-c-regular-size);
   }
 
   :where(&:has(.title-b)) {
-    @include card-scale(globals.lookup("title-b", "regular", "size"));
+    @include card-scale($title-b-regular-size);
   }
 
   :where(&:has(.title-a)) {
-    @include card-scale(globals.lookup("title-a", "regular", "size"));
+    @include card-scale($title-a-regular-size);
   }
 
   :where(&:has(.display-2)) {
-    @include card-scale(globals.lookup("display-2", "regular", "size"));
+    @include card-scale($display-2-regular-size);
   }
 
   :where(&:has(.display-1)) {
-    @include card-scale(globals.lookup("display-1", "regular", "size"));
+    @include card-scale($display-1-regular-size);
   }
 
   // --- Explicit Padding Modifiers ---
   // Use these classes to manually set the padding scale if automatic detection
   // is not desired or not supported.
-  &--display-1 { @include card-scale(globals.lookup("display-1", "regular", "size")); }
-  &--display-2 { @include card-scale(globals.lookup("display-2", "regular", "size")); }
-  &--title-a { @include card-scale(globals.lookup("title-a", "regular", "size")); }
-  &--title-b { @include card-scale(globals.lookup("title-b", "regular", "size")); }
-  &--title-c { @include card-scale(globals.lookup("title-c", "regular", "size")); }
-  &--heading { @include card-scale(globals.lookup("heading", "regular", "size")); }
-  &--subheading { @include card-scale(globals.lookup("subheading", "regular", "size")); }
-  &--body { @include card-scale(globals.lookup("body", "regular", "size")); }
-  &--callout { @include card-scale(globals.lookup("callout", "regular", "size")); }
-  &--label { @include card-scale(globals.lookup("label", "regular", "size")); }
-  &--caption { @include card-scale(globals.lookup("caption", "regular", "size")); }
-  &--overline { @include card-scale(globals.lookup("overline", "regular", "size")); }
+  &--display-1 {
+    @include card-scale($display-1-regular-size);
+  }
+  &--display-2 {
+    @include card-scale($display-2-regular-size);
+  }
+  &--title-a {
+    @include card-scale($title-a-regular-size);
+  }
+  &--title-b {
+    @include card-scale($title-b-regular-size);
+  }
+  &--title-c {
+    @include card-scale($title-c-regular-size);
+  }
+  &--heading {
+    @include card-scale($heading-regular-size);
+  }
+  &--subheading {
+    @include card-scale($subheading-regular-size);
+  }
+  &--body {
+    @include card-scale($body-regular-size);
+  }
+  &--callout {
+    @include card-scale($callout-regular-size);
+  }
+  &--label {
+    @include card-scale($label-regular-size);
+  }
+  &--caption {
+    @include card-scale($caption-regular-size);
+  }
+  &--overline {
+    @include card-scale($overline-regular-size);
+  }
 }

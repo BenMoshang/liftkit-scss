@@ -4,7 +4,8 @@
   "description": "LiftKit is a lightweight framework for clean, minimalist designs, featuring M3 colors, optical kerning, and unique golden ratio spacing.",
   "main": "index.scss",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,scss,css,md}\""
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/Theikon/liftkit-scss/issues"
   },
-  "homepage": "https://github.com/Theikon/liftkit-scss"
+  "homepage": "https://github.com/Theikon/liftkit-scss",
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
 }

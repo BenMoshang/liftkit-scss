@@ -1,25 +1,25 @@
-@use "sass:math";
-
+@use 'sass:math';
+@use 'sass:map';
 /*==========================================================================
  Golden Ratio (Phi) Configuration
  ==========================================================================*/
 
 //-- Core Phi Value --//
-$SCALE: math.div(1.0 + math.sqrt(5.0), 2.0) !default; // ϕ ≈ 1.618
+$SCALE: math.div(1 + math.sqrt(5), 2) !default; // ϕ ≈ 1.618
 $PRECISION: 3 !default; // Default decimal precision for rounding
 
 //-- Major Proportions (Based on powers of Phi) --//
-$MAJOR: math.pow($SCALE, 1.0);        // ϕ^1
-$MAJOR-HALF: math.pow($SCALE, 0.5);   // √ϕ (ϕ^0.5)
+$MAJOR: math.pow($SCALE, 1); // ϕ^1
+$MAJOR-HALF: math.pow($SCALE, 0.5); // √ϕ (ϕ^0.5)
 $MAJOR-QUARTER: math.pow($SCALE, 0.25); // ϕ^1/4
 $MAJOR-EIGHT: math.pow($SCALE, 0.125); // ϕ^1/8
 
 //-- Minor Proportions (Derived from Major Proportions) --//
 // Represents the relationship where 1/ϕ = ϕ - 1
-$MINOR: $MAJOR - 1.0;                 // ϕ - 1 (or 1/ϕ)
-$MINOR-HALF: $MAJOR-HALF - 1.0;       // √ϕ - 1
-$MINOR-QUARTER: $MAJOR-QUARTER - 1.0; // ϕ^1/4 - 1
-$MINOR-EIGHT: $MAJOR-EIGHT - 1.0;     // ϕ^1/8 - 1
+$MINOR: $MAJOR - 1; // ϕ - 1 (or 1/ϕ)
+$MINOR-HALF: $MAJOR-HALF - 1; // √ϕ - 1
+$MINOR-QUARTER: $MAJOR-QUARTER - 1; // ϕ^1/4 - 1
+$MINOR-EIGHT: $MAJOR-EIGHT - 1; // ϕ^1/8 - 1
 
 /*==========================================================================
  Golden Ratio Size Scale (Based on em units) - Optimized
@@ -28,17 +28,18 @@ $MINOR-EIGHT: $MAJOR-EIGHT - 1.0;     // ϕ^1/8 - 1
 // Uses powers of Phi to create a harmonious size scale relative to the base font size (1em).
 // Defines a map of size names to their corresponding power of Phi.
 $_size-scale-powers: (
-  "4xs": -5,
-  "3xs": -4,
-  "2xs": -3,
-  "xs":  -2,
-  "sm":  -1,
-  "md":   0, // Base size (Phi^0 = 1)
-  "lg":   1,
-  "xl":   2,
-  "2xl":  3,
-  "3xl":  4,
-  "4xl":  5
+  '4xs': -5,
+  '3xs': -4,
+  '2xs': -3,
+  'xs': -2,
+  'sm': -1,
+  'md': 0,
+  // Base size (Phi^0 = 1)
+  'lg': 1,
+  'xl': 2,
+  '2xl': 3,
+  '3xl': 4,
+  '4xl': 5,
 );
 
 // Dynamically generate size variables using the map.
@@ -48,16 +49,14 @@ $_size-scale-powers: (
   // The variable name will be like `--size-md`.
   // We calculate the value directly here.
   :root {
-    --size-#{$name}: #{1em * math.pow($SCALE, $power * 1.0)}; // Ensure float calculation
+    --size-#{$name}: #{1em *
+      math.pow($SCALE, $power * 1)}; // Ensure float calculation
   }
 
   // Optionally, also create Sass variables if needed for complex Sass logic elsewhere.
   // These would be $SIZE-MD, $SIZE-LG, etc.
   // Note: Using CSS variables (--size-*) is often preferred for modern workflows.
-  // Uncomment the next line if you specifically need Sass variables.
-  // $SIZE-#{$name}: 1em * math.pow($SCALE, $power * 1.0) !global;
 }
-
 
 /*==========================================================================
  Utility Functions
@@ -80,9 +79,9 @@ $_size-scale-powers: (
     @error "`#{$number}` is not a number for the round-to function.";
   }
   @if type-of($n-digits) != number {
-      @error "`#{$n-digits}` is not a number for the round-to function.";
+    @error "`#{$n-digits}` is not a number for the round-to function.";
   } @else if $n-digits < 0 {
-      @error "Negative precision `#{$n-digits}` is not allowed for the round-to function.";
+    @error "Negative precision `#{$n-digits}` is not allowed for the round-to function.";
   }
 
   //-- Rounding Logic --//
@@ -96,4 +95,23 @@ $_size-scale-powers: (
 
   // Multiply, round to nearest integer, then divide back
   @return math.div(math.round($number * $factor), $factor);
+}
+
+// Exported size map and accessor for use in other modules
+$sizes: (
+  '4xs': 1em * math.pow($SCALE, -5),
+  '3xs': 1em * math.pow($SCALE, -4),
+  '2xs': 1em * math.pow($SCALE, -3),
+  'xs': 1em * math.pow($SCALE, -2),
+  'sm': 1em * math.pow($SCALE, -1),
+  'md': 1em * math.pow($SCALE, 0),
+  'lg': 1em * math.pow($SCALE, 1),
+  'xl': 1em * math.pow($SCALE, 2),
+  '2xl': 1em * math.pow($SCALE, 3),
+  '3xl': 1em * math.pow($SCALE, 4),
+  '4xl': 1em * math.pow($SCALE, 5),
+);
+
+@function inline-size($key) {
+  @return map.get($sizes, $key);
 }
